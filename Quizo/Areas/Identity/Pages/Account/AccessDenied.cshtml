@@ -1,0 +1,27 @@
+﻿@page
+@model AccessDeniedModel
+@{
+	ViewData["Title"] = "Access denied";
+}
+
+<div class="section section-basic">
+	<div class="container">
+		<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 ml-auto mr-auto">
+						<div class="brand">
+							<h2>Sorry!</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<header>
+			<h1 class="text-danger">@ViewData["Title"]</h1>
+			<p class="text-danger">You do not have access to this resource.</p>
+		</header>
+		
+	</div>
+</div>

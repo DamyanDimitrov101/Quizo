@@ -1,0 +1,45 @@
+﻿@{
+	if (ViewData.TryGetValue("ParentLayout", out var parentLayout))
+	{
+		Layout = (string)parentLayout;
+	}
+	else
+	{
+		Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+	}
+}
+<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 ml-auto mr-auto">
+				<div class="brand">
+					<h2>Manage</h2>
+					<h5>your account</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="section section-basic">
+<div class="container">
+
+<div>
+	<h4>Change your account settings</h4>
+	<hr />
+	<div class="row">
+		<div class="col-md-3">
+			<partial name="_ManageNav" />
+		</div>
+		<div class="col-md-9">
+			@RenderBody()
+		</div>
+	</div>
+</div>
+</div>
+</div>
+
+@section Scripts {
+	@RenderSection("Scripts", required: false)
+}

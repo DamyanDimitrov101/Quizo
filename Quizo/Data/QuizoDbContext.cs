@@ -8,6 +8,8 @@ namespace Quizo.Data
 	{
 		public DbSet<Question> Questions { get; init; }
 		public DbSet<Answer> Answers { get; init; }
+		public DbSet<Group> Groups { get; init; }
+
 		public QuizoDbContext(DbContextOptions<QuizoDbContext> options)
 			: base(options)
 		{

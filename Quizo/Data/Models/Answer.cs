@@ -1,12 +1,14 @@
-﻿namespace Quizo.Data.Models
+﻿using System;
+
+namespace Quizo.Data.Models
 {
 	public class Answer
 	{
-		public int  Id { get; init; }
+		public string Id { get; init; } = Guid.NewGuid().ToString();
 
 		public string Value { get; set; }
 
-		public int QuestionId { get; init; }
+		public string QuestionId { get; init; }
 		public Question Question { get; init; }
 	}
 }

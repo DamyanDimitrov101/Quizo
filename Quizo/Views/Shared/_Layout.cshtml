@@ -1,49 +1,238 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Quizo</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Quizo</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2021 - Quizo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<head>
+	<meta charset="utf-8" />
+	<link rel="apple-touch-icon" sizes="76x76" href="/assets/img/apple-icon.png">
+	<link rel="icon" type="image/png" href="/assets/img/favicon.png">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>@ViewData["Title"] - Quizo</title>
+	<meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
+	<!--     Fonts and icons     -->
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+	<!-- CSS Files -->
+	<link href="/assets/css/material-kit.css?v=2.0.7" rel="stylesheet" />
+	<link rel="stylesheet" href="/assets/css/MySheet.css" />
+
+	<!-- CSS Just for demo purpose, don't include it in your project -->
+	<link href="/assets/demo/demo.css" rel="stylesheet" />
+</head>
+
+<body class="index-page sidebar-collapse">
+	<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
+		<div class="container">
+			<div class="navbar-translate">
+				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
+					<b>Quizo</b>
+				</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="navbar-toggler-icon"></span>
+					<span class="navbar-toggler-icon"></span>
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
+			<div class="collapse navbar-collapse">
+				<ul class="navbar-nav ml-auto">
+					<li class="nav-item">
+						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://twitter.com/" target="_blank" data-original-title="Follow us on Twitter" rel="nofollow">
+							<i class="fa fa-twitter"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.facebook.com/" target="_blank" data-original-title="Like us on Facebook" rel="nofollow">
+							<i class="fa fa-facebook-square"></i>
+						</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.instagram.com/" target="_blank" data-original-title="Follow us on Instagram" rel="nofollow">
+							<i class="fa fa-instagram"></i>
+						</a>
+					</li>
+				</ul>
+				<partial name="_LoginPartial" />
+			</div>
+		</div>
+	</nav>
+
+
+<main role="main space-70 main-raised" class="pb-3 main">
+	@RenderBody()
+</main>
+
+
+	<!--  End Modal -->
+	<footer class="footer" data-background-color="black">
+		<div class="container">
+			<nav class="float-left">
+				<ul>
+					<li>
+						<a asp-controller="Groups" asp-action="All">
+							Groups
+						</a>
+					</li>
+				</ul>
+			</nav>
+			<div class="copyright float-right">
+				&copy;
+				<script>
+					document.write(new Date().getFullYear())
+				</script> - Quizo - 
+				<a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+			</div>
+		</div>
+	</footer>
+	<!--   Core JS Files   -->
+	<script src="/assets/js/core/jquery.min.js" type="text/javascript"></script>
+	<script src="/assets/js/core/popper.min.js" type="text/javascript"></script>
+	<script src="/assets/js/core/bootstrap-material-design.min.js" type="text/javascript"></script>
+	<script src="/assets/js/plugins/moment.min.js"></script>
+	<!--	Plugin for the Datepicker, full documentation here: https://github.com/Eonasdan/bootstrap-datetimepicker -->
+	<script src="/assets/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+	<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+	<script src="/assets/js/plugins/nouislider.min.js" type="text/javascript"></script>
+	<!--  Google Maps Plugin    -->
+	<!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+	<script src="/assets/js/material-kit.js?v=2.0.7" type="text/javascript"></script>
+<script>
+	$(document).ready(function () {
+		//init DateTimePickers
+		materialKit.initFormExtendedDatetimepickers();
+
+		// Sliders Init
+		materialKit.initSliders();
+	});
+
+
+	function scrollToDownload() {
+		if ($('.section-download').length != 0) {
+			$("html, body").animate({
+				scrollTop: $('.section-download').offset().top
+			}, 1000);
+		}
+	}
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+
 </body>
+
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>@ViewData["Title"] - Quizo</title>
+		<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="~/css/site.css" />
+	</head>
+	<body>
+		<header>
+			<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+				<div class="container">
+					<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Quizo</a>
+					<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+							aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+						<ul class="navbar-nav flex-grow-1">
+
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Groups" asp-action="All">Groups</a>
+							</li>
+						</ul>
+						<partial name="_LoginPartial" />
+					</div>
+				</div>
+			</nav>
+		</header>
+		<div class="container">
+			<main role="main" class="pb-3">
+				@RenderBody()
+			</main>
+		</div>
+
+		<footer class="border-top footer text-muted">
+			<div class="container">
+				&copy; 2021 - Quizo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+			</div>
+		</footer>
+		<script src="~/lib/jquery/dist/jquery.min.js"></script>
+		<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="~/js/site.js" asp-append-version="true"></script>
+		@await RenderSectionAsync("Scripts", required: false)
+	</body>
+	</html>
+*@
