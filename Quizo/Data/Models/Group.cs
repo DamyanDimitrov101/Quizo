@@ -24,7 +24,7 @@ namespace Quizo.Data.Models
 		[Display(Name = "Image Url")]
 		[Required]
 		[Url]
-		public string ImageUrl { get; init; }
+		public string ImageUrl { get; set; }
 
 		public IEnumerable<Question> Questions { get; set; } = new List<Question>();
 		public List<IdentityUser> Members { get; set; } = new List<IdentityUser>();

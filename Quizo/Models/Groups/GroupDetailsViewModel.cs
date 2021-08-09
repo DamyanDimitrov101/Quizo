@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Quizo.Models.Identity;
 
 namespace Quizo.Models.Groups
 {
@@ -15,6 +13,7 @@ namespace Quizo.Models.Groups
 		public string Description { get; set; }
 
 		public string ImageUrl { get; init; }
-		
+
+		public IList<UserViewModel> Tops { get; set; } = new List<UserViewModel>();
 	}
 }

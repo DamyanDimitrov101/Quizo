@@ -21,12 +21,12 @@
 
 
 
-<div class="section section-signup page-header" style="background-image: url('./assets/img/bg3.jpg');">
-	<div class="container">
-		<div class="row">
+<div class="section section-signup page-header h-75" data-parallax="true" style="background-image: url('/assets/img/bg9.png');">
+	<div class="container mt-lg-5">
+		<div class="row mt-lg-5">
 			<div class="col-lg-4 col-md-6 mx-auto">
 				<div class="card card-login">
-					<form class="form">
+					<form class="form" id="account" method="post" novalidate>
 						<div class="card-header card-header-primary text-center">
 							<h4 class="card-title">Login</h4>
 							<div class="social-line">
@@ -47,15 +47,6 @@
 								<div class="input-group">
 									<div class="input-group-prepend">
 										<span class="input-group-text">
-											<i class="material-icons">face</i>
-										</span>
-									</div>
-									<input type="text" class="form-control" placeholder="First Name">
-								</div>
-							</span><span class="bmd-form-group">
-								<div class="input-group">
-									<div class="input-group-prepend">
-										<span class="input-group-text">
 											<i class="material-icons">mail</i>
 										</span>
 									</div>
@@ -64,10 +55,6 @@
 								</div>
 							</span>
 
-							@*<label asp-for="Input.Email" class="input-group">
-		</label>*@
-
-
 							<span class="bmd-form-group">
 								<div class="input-group">
 									<div class="input-group-prepend">
@@ -75,16 +62,11 @@
 											<i class="material-icons">lock_open</i>
 										</span>
 									</div>
-									<input type="text" asp-for="Input.Password" class="form-control" placeholder="Password" />
-							<span asp-validation-for="Input.Password" class="text-danger"></span>
+									<input type="password" asp-for="Input.Password" class="form-control" placeholder="Password" />
+									<span asp-validation-for="Input.Password" class="text-danger"></span>
 
 								</div>
 							</span>
-
-							@*
-							<label class="input-group" asp-for="Input.Password">
-							</label>
-						*@
 						</div>
 
 						<div class="form-group text-center">
@@ -95,8 +77,21 @@
 								</label>
 							</div>
 						</div>
+
+						<div class="form-group text-center">
+							<p>
+								<a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+							</p>
+							<p>
+								<a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+							</p>
+							<p>
+								<a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+							</p>
+						</div>
+
 						<div class="footer text-center">
-							<a href="javascript:;" class="btn btn-primary btn-link btn-wd btn-lg">Get Started</a>
+							<button type="submit" class="btn btn-primary btn-lg mb-lg-5">Log in</button>
 						</div>
 					</form>
 				</div>
@@ -104,6 +99,10 @@
 		</div>
 	</div>
 </div>
+
+
+
+
 
 
 
@@ -193,7 +192,8 @@
 		</div>
 	</div>
 	</div>
-	</div>*@
+	</div>
+*@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

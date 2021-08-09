@@ -13,6 +13,7 @@ using Quizo.Models.Groups;
 using Microsoft.AspNetCore.Identity;
 using Quizo.Models.Identity;
 
+
 namespace Quizo.Controllers
 {
 	public class GroupsController : Controller
@@ -91,7 +92,12 @@ namespace Quizo.Controllers
 					OwnerName = this._context.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
-
+					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
+					{
+						Email = u.Email,
+						Id = u.Id
+					})
+						.ToList()
 				})
 				.FirstOrDefaultAsync(m => m.Id == id);
 
@@ -129,8 +135,13 @@ namespace Quizo.Controllers
 				Name = group.Name,
 				ImageUrl = group.ImageUrl,
 				Description = group.Description,
-				OwnerId = userId
+				OwnerId = userId,
+				Members = new List<IdentityUser>()
 			};
+
+			/*TODO:
+			 * newGroup.Members.Add(CurrentUser);
+			*/
 
 			_context.Add(newGroup);
 			await _context.SaveChangesAsync();
@@ -140,7 +151,7 @@ namespace Quizo.Controllers
 
 		// GET: Groups/Edit/5
 		[Authorize]
-		public async Task<IActionResult> Edit(int? id)
+		public async Task<IActionResult> Edit(string id)
 		{
 			if (id == null)
 			{
@@ -159,8 +170,11 @@ namespace Quizo.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
-		public async Task<IActionResult> Edit(string id, [Bind("Id,Name")] Group @group)
+		public async Task<IActionResult> Edit(string id, string name, string imageUrl,string description)
 		{
+			Group @group = await this._context.Groups
+				.FirstOrDefaultAsync(g => g.Id == id);
+
 			if (id != @group.Id)
 			{
 				return NotFound();
@@ -170,6 +184,10 @@ namespace Quizo.Controllers
 			{
 				try
 				{
+					@group.ImageUrl = imageUrl;
+					@group.Description = description;
+					@group.Name = name;
+
 					_context.Update(@group);
 					await _context.SaveChangesAsync();
 				}
@@ -184,7 +202,7 @@ namespace Quizo.Controllers
 						throw;
 					}
 				}
-				return RedirectToAction(nameof(All));
+				return RedirectToAction(nameof(Details), @group);
 			}
 			return View(@group);
 		}
@@ -212,7 +230,7 @@ namespace Quizo.Controllers
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		[Authorize]
-		public async Task<IActionResult> DeleteConfirmed(int id)
+		public async Task<IActionResult> DeleteConfirmed(string id)
 		{
 			var @group = await _context.Groups.FindAsync(id);
 			_context.Groups.Remove(@group);
