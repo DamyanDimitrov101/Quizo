@@ -11,6 +11,7 @@ using Quizo.Data;
 using Quizo.Data.Models;
 using Quizo.Models.Groups;
 using Microsoft.AspNetCore.Identity;
+using Quizo.Models.Identity;
 
 namespace Quizo.Controllers
 {
@@ -24,20 +25,53 @@ namespace Quizo.Controllers
 		}
 
 		// GET: Groups
-		public async Task<IActionResult> All()
+		public async Task<IActionResult> All([FromQuery] GroupListingAllViewModel query)
 		{
-			var groups = this._context
+			var groupsQuery = this._context
 				.Groups
-				.Select(g => new GroupListingAllViewModel
+				.AsQueryable();
+
+			if (!string.IsNullOrWhiteSpace(query.SearchTerm))
+			{
+				groupsQuery = groupsQuery.Where(g =>
+					g.Name.ToLower().Contains(query.SearchTerm.ToLower()));
+			}
+
+			groupsQuery = query.Sorting switch
+			{
+				GroupSorting.DateCreated => groupsQuery.OrderByDescending(g => g.Id),
+				GroupSorting.Name => groupsQuery.OrderByDescending(g => g.Name),
+				GroupSorting.MostMembers => groupsQuery.OrderByDescending(g => g.Members.Count()),
+				_ => groupsQuery.OrderByDescending(g => g.Id)
+			};
+
+			var totalGroups = groupsQuery.Count();
+
+			var groups = groupsQuery
+				.Skip((query.CurrentPage - 1) * GroupListingAllViewModel.GroupsPerPage)
+				.Take(GroupListingAllViewModel.GroupsPerPage)
+				.Select(g => new GroupListingViewModel
 				{
+					Id = g.Id,
 					Name = g.Name,
-					 OwnerName= this._context.Users.FirstOrDefault(u=> u.Id==g.OwnerId).Email,
-					 Description = g.Description,
-					ImageUrl = g.ImageUrl
+					OwnerName = this._context.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
+					Description = g.Description,
+					ImageUrl = g.ImageUrl,
+					Members = this._context.Users
+						.Where(uv => g.Members.Contains(uv))
+						.Select(u => new UserViewModel
+						{
+							Id = u.Id,
+							Email = u.Email
+						})
+						.ToList()
 				})
 				.ToListAsync();
 
-			return View(await groups);
+			query.TotalGroups = totalGroups;
+			query.Groups = await groups;
+
+			return View(query);
 		}
 
 		// GET: Groups/Details/5
@@ -48,14 +82,26 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
-			var @group = await _context.Groups
+			var groupDetails = await _context.Groups
+				.Where(m => m.Id == id)
+				.Select(g => new GroupDetailsViewModel
+				{
+					Id = g.Id,
+					Name = g.Name,
+					OwnerName = this._context.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
+					Description = g.Description,
+					ImageUrl = g.ImageUrl,
+
+				})
 				.FirstOrDefaultAsync(m => m.Id == id);
-			if (@group == null)
+
+
+			if (groupDetails == null)
 			{
 				return NotFound();
 			}
 
-			return View(@group);
+			return View(groupDetails);
 		}
 
 		// GET: Groups/Create
@@ -89,7 +135,7 @@ namespace Quizo.Controllers
 			_context.Add(newGroup);
 			await _context.SaveChangesAsync();
 
-			return RedirectToAction("All","Groups");
+			return RedirectToAction("All", "Groups");
 		}
 
 		// GET: Groups/Edit/5

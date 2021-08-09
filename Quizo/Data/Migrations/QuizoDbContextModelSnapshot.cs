@@ -89,6 +89,9 @@ namespace Quizo.Data.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("GroupId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -123,6 +126,8 @@ namespace Quizo.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -298,6 +303,13 @@ namespace Quizo.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.HasOne("Quizo.Data.Models.Group", null)
+                        .WithMany("Members")
+                        .HasForeignKey("GroupId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
@@ -358,6 +370,8 @@ namespace Quizo.Data.Migrations
 
             modelBuilder.Entity("Quizo.Data.Models.Group", b =>
                 {
+                    b.Navigation("Members");
+
                     b.Navigation("Questions");
                 });
 

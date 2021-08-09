@@ -4845,6 +4845,10 @@ tbody.collapse.show {
   margin-bottom: 0;
 }
 
+.card-text {
+	overflow: hidden;
+}
+
 .card-text:last-child {
   margin-bottom: 0;
 }
@@ -5110,9 +5114,9 @@ tbody.collapse.show {
 }
 
 .page-item:first-child .page-link {
-  margin-left: 0;
-  border-top-left-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
+    margin-left: 0;
+    border-top-left-radius: 0.25rem;
+    border-bottom-left-radius: 0.25rem;
 }
 
 .page-item:last-child .page-link {
@@ -5128,7 +5132,7 @@ tbody.collapse.show {
 }
 
 .page-item.disabled .page-link {
-  color: #6c757d;
+  color: lightgray;
   pointer-events: none;
   cursor: auto;
   background-color: transparent;
@@ -15127,13 +15131,15 @@ textarea {
   min-width: 30px;
   height: 30px;
   line-height: 30px;
-  color: #999999;
+  color: aqua;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;
   background: transparent;
   text-align: center;
 }
+
+
 
 .pagination>.page-item>.page-link:hover,
 .pagination>.page-item>.page-link:focus,
@@ -19091,6 +19097,3 @@ footer .pull-center {
 }
 
 /*# sourceMappingURL=kit-free.css.map */
-
-
-

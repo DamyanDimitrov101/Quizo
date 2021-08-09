@@ -1,4 +1,4 @@
-﻿@model Quizo.Data.Models.Group
+﻿@model Quizo.Models.Groups.GroupDetailsViewModel
 
 @{
 	ViewData["Title"] = "Details";
@@ -17,24 +17,68 @@
 
 
 <div class="section section-basic">
-<div class="container">
-<h1>Details</h1>
+	<div class="container">
+		<h1>@Model.Name Details</h1>
 
-<div>
-	<h4>Group</h4>
-	<hr />
-	<dl class="row">
-		<dt class="col-sm-2">
-			@Html.DisplayNameFor(model => model.Name)
-		</dt>
-		<dd class="col-sm-10">
-			@Html.DisplayFor(model => model.Name)
-		</dd>
-	</dl>
-</div>
-<div>
-	<a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-	<a asp-action="All">Back to List</a>
-</div>
-</div>
+
+
+		<div id="navbar">
+			<div class="navigation-example" style="background-image: url('@Model.ImageUrl');">
+			
+
+			</div>
+		</div>
+
+
+
+
+
+		<div class="col-lg-6 col-md-8">
+			<ul class="nav nav-pills nav-pills-icons" role="tablist">
+				<!--
+							color-classes: "nav-pills-primary", "nav-pills-info", "nav-pills-success", "nav-pills-warning","nav-pills-danger"
+						-->
+				<li class="nav-item">
+					<a class="nav-link active show" href="#dashboard-1" role="tab" data-toggle="tab" aria-selected="true">
+						<i class="material-icons">description</i>
+						Description
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#schedule-1" role="tab" data-toggle="tab" aria-selected="false">
+						<i class="material-icons">edit</i>
+						Manage
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#tasks-1" role="tab" data-toggle="tab" aria-selected="false">
+						<i class="material-icons">play_circle</i>
+						Start Quiz
+					</a>
+				</li>
+			</ul>
+			<div class="tab-content tab-space">
+				<div class="tab-pane active show" id="dashboard-1">
+					@Model.Description
+					<br><br>
+					@Model.OwnerName is the owner of this group.
+				</div>
+				<div class="tab-pane" id="schedule-1">
+					<a asp-controller="Groups" asp-action="Edit" asp-route-id="@Model.Id">Edit Group</a>
+					<br><br>
+					<a asp-controller="Groups" asp-action="Delete" asp-route-id="@Model.Id">Delete Group</a>
+				</div>
+				<div class="tab-pane" id="tasks-1">
+					@*<a asp-controller="">content</a>
+					*@
+					<br><br>Dynamically innovate resource-leveling customer service for state of the art customer service.
+				</div>
+			</div>
+		</div>
+
+
+		<div>
+			<a asp-action="All">Back to List</a>
+		</div>
+	</div>
 </div>

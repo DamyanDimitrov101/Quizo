@@ -1,6 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 
-@model IEnumerable<Quizo.Models.Groups.GroupListingAllViewModel>
+@model Quizo.Models.Groups.GroupListingAllViewModel
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
 
@@ -33,37 +33,183 @@
 	<div class="container">
 		<h1>Groups</h1>
 
+		<form method="get">
+			<div class="row">
+				<div class="form-group w-100">
+					<label asp-for="SearchTerm"></label>
+					<input asp-for="SearchTerm" class="form-control " placeholder="The name of the group here..." />
+				</div>
+
+				<div class="form-group w-50">
+					<div class="form-group">
+						<label asp-for="Sorting"></label>
+						<select asp-for="Sorting" class="form-control">
+							<option value="0" selected>Date Created</option>
+							<option value="1">Name</option>
+							<option value="2">Most members</option>
+						</select>
+					</div>
+				</div>
+
+
+				<div class="form-group w-100">
+					<input type="submit" class="btn btn-primary pull-right btn-round" value="Search" />
+				</div>
+			</div>
+		</form>
+
+
 		<p>
 			<a asp-action="Create">Create New</a>
 		</p>
 
 		<div id="cards_landscape_wrap-2">
-					<div class="container">
-						<div class="row">
-							@foreach (var group in Model)
-							{
-								<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
-									<a href="">
-										<div class="card-flyer">
-											<div class="text-box">
-												<div class="image-box">
-													<img src="@group.ImageUrl" alt="@group.Name @group.OwnerName"/>
-												</div>
-												<div class="text-container">
-													<h6>@group.OwnerName</h6>
-													<h3>@group.Name</h3>
-													<p>@group.Description</p>
-												</div>
-											</div>
+			<div class="container">
+				<div class="row">
+					@foreach (var group in Model.Groups)
+					{
+						<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+							<a asp-controller="Groups" asp-action="Details" asp-route-id="@group.Id">
+								<div class="card-flyer">
+									<div class="text-box">
+										<div class="image-box">
+											<img src="@group.ImageUrl" alt="@group.Name @group.OwnerName" />
 										</div>
-									</a>
+										<div class="text-container overflow-hidden card-text">
+											<h6>@group.OwnerName</h6>
+											<h3>@group.Name</h3>
+											<p class="img-container">@group.Description</p>
+										</div>
+									</div>
 								</div>
-							}
+							</a>
 						</div>
+					}
+				</div>
+			</div>
+		</div>
+		
+		
+		
+		<ul class="pagination pagination-info float-right">
+			@{
+				var previousPage = Model.CurrentPage - 1;
+				if (previousPage <= 0) previousPage = 1;
+
+				double maxPage = Math.Ceiling((double) Model.TotalGroups / GroupListingAllViewModel.GroupsPerPage);
+				var hasNext = Model.CurrentPage == maxPage;
+			}
+
+			<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "mt-1")">
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(previousPage)"
+				   class="@(Model.CurrentPage != 1 ? "btn-outline-info" : "page-link")"> Prev</a>
+			</li>
+			@{
+				var page = Model.CurrentPage - 2;
+				if (page < 1) page = 1;
+			}
+			<li class="page-item @(Model.CurrentPage == page? "active" : string.Empty)">
+
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(page)"
+				   class="page-link">@(page)</a>
+			</li>
+			@{
+				var page2 = Model.CurrentPage - 1;
+				if (page2 < 2) page2 = 2;
+			}
+			<li class="page-item @(Model.CurrentPage == page2? "active" : string.Empty) @(maxPage < page2 ? "invisible" : string.Empty)">
+
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(page2)"
+				   class="page-link">@(page2)</a>
+			</li>
+			@{
+				var page3 = Model.CurrentPage;
+				if (page3 < 3) page3 = 3;
+			}
+			<li class="page-item @(Model.CurrentPage == page3? "active" : string.Empty) @(maxPage < page3 ? "invisible" : string.Empty)">
+			<a asp-controller="Groups"
+			   asp-action="All"
+			   asp-route-SearchTerm="@(Model.SearchTerm)"
+			   asp-route-Sorting="@((int)Model.Sorting)"
+			   asp-route-CurrentPage="@(page3)"
+			   class="page-link">@(page3)</a>
+			@{
+				var page4 = Model.CurrentPage + 1;
+				if (page4 < 4) page4 = 4;
+			}
+			<li class="page-item @(Model.CurrentPage == page4? "active" : string.Empty) @(maxPage < page4 ? "invisible" : string.Empty)">
+
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(page4)"
+				   class="page-link">@(page4)</a>
+			</li>
+			@{
+				var page5 = Model.CurrentPage + 2;
+				if (page5 < 5) page5 = 5;
+			}
+			<li class="page-item @(Model.CurrentPage == page5? "active" : string.Empty) @(maxPage < page5 ? "invisible" : string.Empty)">
+
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(page5)"
+				   class="page-link">@(page5)</a>
+			</li>
+			<li class="page-item @(hasNext
+				                     ? "disabled" : "mt-1")">
+				<a asp-controller="Groups"
+				   asp-action="All"
+				   asp-route-SearchTerm="@(Model.SearchTerm)"
+				   asp-route-Sorting="@((int)Model.Sorting)"
+				   asp-route-CurrentPage="@(Model.CurrentPage + 1)"
+				   class="@(!hasNext
+					          ? "btn-outline-info" : "page-link")">Next </a>
+			</li>
+		</ul>
+		
+		
+		<div class="text-container text-center font-weight-lighter">
+			<div class="container">
+				<br><br>
+				<div class="row text-center">
+					<div class="col-md-8 mx-auto">
+						<h2>Any questions?</h2>
+						<h4>Integer eu sem non sapien maximus malesuada elementum iaculis magna. Nam semper molestie nulla. Suspendisse potenti. Etiam consequat tempus ligula in lobortis. Quisque ante mi, feugiat ac magna quis, iaculis tincidunt magna. Nam mi felis, vehicula sit amet suscipit a, lobortis sit amet elit. Aliquam porta eros at bibendum viverra. Integer faucibus metus justo, et interdum augue pretium et. Donec odio urna, tincidunt quis velit ut, ultrices egestas ligula. Quisque sit amet auctor sem. Ut elit felis, tristique sed elit sed, cursus tincidunt nunc. Duis vel dui nec magna convallis cursus. Nunc faucibus, metus vel dapibus malesuada, ex mi congue ipsum, eget luctus leo nisl a nisi. Morbi efficitur vitae felis non volutpat. Ut sit amet feugiat sapien, non convallis diam..</h4>
+					</div>
+					<div class="col-sm-8 col-md-5 mx-auto">
+						<a href="https://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-mk-demos" class="btn btn-info btn-upgrade btn-lg" target="_blank">
+							<i class="material-icons">contact_support</i> Ask here
+						</a>
 					</div>
 				</div>
+				<div class="sharing-area text-center">
+					<div class="row justify-content-center">
+						<h3>Thank you for supporting us!</h3>
+						<p>Maecenas congue, ipsum at efficitur pharetra, ligula turpis pretium ex, non lobortis odio mauris vitae lectus. Quisque molestie, tortor sed commodo pulvinar, nisi augue mattis ex, euismod viverra nisl purus vitae ex. Etiam orci orci, varius ut commodo non, viverra at eros. Praesent neque enim, congue sit amet lorem non, vestibulum convallis risus. Donec scelerisque dolor eu ex accumsan, nec congue ligula imperdiet. Integer faucibus libero sit amet elit imperdiet, et euismod lacus rhoncus. Maecenas ut finibus nisl, sed laoreet justo. Etiam non neque maximus, malesuada lectus vitae, aliquam ipsum. Sed consequat luctus mi eu euismod. Praesent mi leo, pretium varius nisl ac, pellentesque viverra ex. Suspendisse eu vestibulum orci, vel vulputate enim. Vestibulum eu vulputate leo. Aenean tempor nulla tellus, eget elementum enim efficitur viverra. Nulla facilisi. Morbi posuere faucibus mauris ac imperdiet. Phasellus placerat nulla sapien, ac tempor neque tristique consectetur.</p>
+						</div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
+
+
 
 
 @*
