@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Quizo.Models.Identity;
 using static Quizo.Data.DataConstants.Group;
 
 namespace Quizo.Data.Models

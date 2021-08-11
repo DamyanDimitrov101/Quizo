@@ -12,65 +12,32 @@ using Quizo.Data.Models;
 using Quizo.Models.Groups;
 using Microsoft.AspNetCore.Identity;
 using Quizo.Models.Identity;
+using Quizo.Services.Groups.Interfaces;
 
 
 namespace Quizo.Controllers
 {
 	public class GroupsController : Controller
 	{
+		private readonly IGroupsService _groupsService;
 		private readonly QuizoDbContext _context;
 
-		public GroupsController(QuizoDbContext context)
+		public GroupsController(IGroupsService groupsService, QuizoDbContext context)
 		{
+			_groupsService = groupsService;
 			_context = context;
 		}
 
 		// GET: Groups
-		public async Task<IActionResult> All([FromQuery] GroupListingAllViewModel query)
+		public IActionResult All([FromQuery] GroupListingAllViewModel query)
 		{
-			var groupsQuery = this._context
-				.Groups
-				.AsQueryable();
+			var service = this._groupsService.All(query);
 
-			if (!string.IsNullOrWhiteSpace(query.SearchTerm))
-			{
-				groupsQuery = groupsQuery.Where(g =>
-					g.Name.ToLower().Contains(query.SearchTerm.ToLower()));
-			}
-
-			groupsQuery = query.Sorting switch
-			{
-				GroupSorting.DateCreated => groupsQuery.OrderByDescending(g => g.Id),
-				GroupSorting.Name => groupsQuery.OrderByDescending(g => g.Name),
-				GroupSorting.MostMembers => groupsQuery.OrderByDescending(g => g.Members.Count()),
-				_ => groupsQuery.OrderByDescending(g => g.Id)
-			};
-
-			var totalGroups = groupsQuery.Count();
-
-			var groups = groupsQuery
-				.Skip((query.CurrentPage - 1) * GroupListingAllViewModel.GroupsPerPage)
-				.Take(GroupListingAllViewModel.GroupsPerPage)
-				.Select(g => new GroupListingViewModel
-				{
-					Id = g.Id,
-					Name = g.Name,
-					OwnerName = this._context.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
-					Description = g.Description,
-					ImageUrl = g.ImageUrl,
-					Members = this._context.Users
-						.Where(uv => g.Members.Contains(uv))
-						.Select(u => new UserViewModel
-						{
-							Id = u.Id,
-							Email = u.Email
-						})
-						.ToList()
-				})
-				.ToListAsync();
-
-			query.TotalGroups = totalGroups;
-			query.Groups = await groups;
+			query.Groups = service.Groups;
+			query.TotalGroups = service.TotalGroups;
+			query.SearchTerm= service.SearchTerm;
+			query.Sorting = service.Sorting;
+			query.CurrentPage = service.CurrentPage;
 
 			return View(query);
 		}
@@ -139,11 +106,25 @@ namespace Quizo.Controllers
 				Members = new List<IdentityUser>()
 			};
 
-			/*TODO:
-			 * newGroup.Members.Add(CurrentUser);
-			*/
+			//TODO:
 
-			_context.Add(newGroup);
+			/*
+			IdentityUser user = new IdentityUser("Test1");
+			IdentityUser user1 = new IdentityUser("Test2");
+			IdentityUser user2 = new IdentityUser("Test3");
+			IdentityUser user3 = new IdentityUser("Test4");
+			
+			_context.Users.Add(user);
+			_context.Users.Add(user1);
+			_context.Users.Add(user2);
+			_context.Users.Add(user3);*/
+
+			/*
+			newGroup.Members = new List<IdentityUser>
+				{user, user2, user3, user1};
+				*/
+
+			_context.Groups.Add(newGroup);
 			await _context.SaveChangesAsync();
 
 			return RedirectToAction("All", "Groups");

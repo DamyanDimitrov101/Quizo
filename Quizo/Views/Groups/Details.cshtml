@@ -20,19 +20,13 @@
 	<div class="container">
 		<h1>@Model.Name Details</h1>
 
-
-
+		
 		<div id="navbar">
 			<div class="navigation-example" style="background-image: url('@Model.ImageUrl');">
 			
-
 			</div>
 		</div>
-
-
-
-
-
+		
 		<div class="col-lg-6 col-md-8">
 			<ul class="nav nav-pills nav-pills-icons" role="tablist">
 				<!--
@@ -45,7 +39,7 @@
 					</a>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="#schedule-1" role="tab" data-toggle="tab" aria-selected="false">
+					<a class="nav-link" id="top" href="#schedule-1" role="tab" data-toggle="tab" aria-selected="false">
 						<i class="material-icons">star</i>
 						Top 10
 					</a>
@@ -73,13 +67,20 @@
 				<div class="tab-pane" id="schedule-1">
 					<div class="container">
 						<div class="row">
-							<div class="col-12 col-md-6">
+							<div class="w-100">
 								<h6 class="text-muted">Top 10 by given answers!</h6> 
 								<ul class="list-group list-group-flush">
-									@foreach (var user in Model.Tops)
-									{
-										<li class="list-group-item">@user.Email</li>
-									}
+
+									<li id="user1" class="list-group-item bg-light">...</li>
+									<li id="user2" class="list-group-item bg-light">...</li>
+									<li id="user3" class="list-group-item bg-light">...</li>
+									<li id="user4" class="list-group-item">...</li>
+									<li id="user5" class="list-group-item">...</li>
+									<li id="user6" class="list-group-item">...</li>
+									<li id="user7" class="list-group-item">...</li>
+									<li id="user8" class="list-group-item">...</li>
+									<li id="user9" class="list-group-item">...</li>
+									<li id="user10" class="list-group-item">...</li>
 								</ul>
 							</div>
 						</div>
@@ -105,5 +106,33 @@
 		<div>
 			<a asp-action="All">Back to List</a>
 		</div>
+	</div>
+</div>
+
+
+@section Scripts
+{
+	<script>
+		$('#top').on('click',
+			ev => {
+				$.get('/api/standings/@Model.Id',
+					data => {
+						for (var i = 1; i <= 10; i++) {
+							$((`#user${i}`)).html(`<div class="row w-100"><div class="alert alert-info w-100 d-flex p-1 m-0"><h5>${i}.</h5>` + '<h4 class="w-50">' + data[i].userName + '</h4></div></div>');
+						}
+					});
+			});
+	</script>
+}
+
+<div class="alert alert-info">
+	<div class="container">
+		<div class="alert-icon">
+			<i class="material-icons">info_outline</i>
+		</div>
+		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+			<span aria-hidden="true"><i class="material-icons">clear</i></span>
+		</button>
+		<b>Info alert:</b> You've got some friends nearby, stop looking at your phone and find them...
 	</div>
 </div>

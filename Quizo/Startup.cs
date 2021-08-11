@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quizo.Data;
 using Quizo.Infrastructure;
+using Quizo.Services.Groups;
+using Quizo.Services.Groups.Interfaces;
 
 namespace Quizo
 {
@@ -33,6 +35,8 @@ namespace Quizo
 				})
 				.AddEntityFrameworkStores<QuizoDbContext>();
 			services.AddControllersWithViews();
+
+			services.AddTransient<IGroupsService, GroupsService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
