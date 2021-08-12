@@ -9426,7 +9426,7 @@ a.text-light:focus {
 }
 
 .text-dark {
-  color: #343a40 !important;
+  color: #343a40;
 }
 
 a.text-dark:hover,
@@ -15131,7 +15131,7 @@ textarea {
   min-width: 30px;
   height: 30px;
   line-height: 30px;
-  color: aqua;
+  color: gray;
   font-weight: 400;
   font-size: 12px;
   text-transform: uppercase;

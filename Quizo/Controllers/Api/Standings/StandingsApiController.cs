@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Quizo.Data;
 using Quizo.Models.Identity;
 
@@ -19,11 +20,12 @@ namespace Quizo.Controllers.Api.Standings
 		public ActionResult<IList<UserViewModel>> GetStandings(string id)
 		{
 			var group = this.data.Groups
-				.Find(id);
+				.Include(g => g.Members)
+				.FirstOrDefaultAsync(g=> g.Id==id);
 
 				if(group is null) return NotFound();
 
-				var members = data.Users.ToList();
+				var members = group.Result.Members.Select(m=> m.FullName).ToList();
 			
 				return Ok(members);
 		}

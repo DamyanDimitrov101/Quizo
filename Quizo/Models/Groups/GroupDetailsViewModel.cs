@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Quizo.Data.Models.Identity;
 using Quizo.Models.Identity;
 
 namespace Quizo.Models.Groups
@@ -8,8 +9,8 @@ namespace Quizo.Models.Groups
 		public string Id { get; set; }
 		public string Name { get; set; }
 
-		public string OwnerName { get; init; }
-
+		public bool IsOwner { get; init; }
+		
 		public string Description { get; set; }
 
 		public string ImageUrl { get; init; }

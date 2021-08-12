@@ -16,17 +16,17 @@ namespace Quizo.Controllers.Api.Groups
 	[ApiController]
 	public class GroupsApiController : ControllerBase
 	{
-		private readonly IGroupsService groups;
+		private readonly IGroupsService _groups;
 
 		public GroupsApiController(IGroupsService groups)
 		{
-			this.groups = groups;
+			this._groups = groups;
 		}
 
 
 		[HttpGet]
-		public ActionResult<GroupsServiceModel> All([FromQuery] AllGroupsApiRequestModel query) 
-			=> this.groups.All(new GroupListingAllViewModel
+		public Task<ActionResult<GroupsServiceModel>> All([FromQuery] AllGroupsApiRequestModel query)	
+			=> this._groups.All(new GroupListingAllViewModel
 			{
 				CurrentPage = query.CurrentPage,
 				SearchTerm = query.SearchTerm,

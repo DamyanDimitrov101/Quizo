@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Quizo.Data.Models.Identity
 
 @model Quizo.Models.Groups.GroupListingAllViewModel
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<User> SignInManager
 
 @{
 	ViewData["Title"] = "All Groups";

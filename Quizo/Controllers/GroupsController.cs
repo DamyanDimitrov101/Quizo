@@ -1,22 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.UI.V4.Pages.Internal;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Quizo.Data;
 using Quizo.Data.Models;
 using Quizo.Models.Groups;
-using Microsoft.AspNetCore.Identity;
-using Quizo.Models.Identity;
 using Quizo.Services.Groups.Interfaces;
+using Quizo.Services.Groups.Models;
 
 
 namespace Quizo.Controllers
 {
+	[Authorize]
 	public class GroupsController : Controller
 	{
 		private readonly IGroupsService _groupsService;
@@ -29,20 +26,22 @@ namespace Quizo.Controllers
 		}
 
 		// GET: Groups
-		public IActionResult All([FromQuery] GroupListingAllViewModel query)
+		[Authorize]
+		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupListingAllViewModel query)
 		{
-			var service = this._groupsService.All(query);
+			var service = await this._groupsService.All(query);
 
-			query.Groups = service.Groups;
-			query.TotalGroups = service.TotalGroups;
-			query.SearchTerm= service.SearchTerm;
-			query.Sorting = service.Sorting;
-			query.CurrentPage = service.CurrentPage;
+			query.Groups = service.Value.Groups;
+			query.TotalGroups = service.Value.TotalGroups;
+			query.SearchTerm= service.Value.SearchTerm;
+			query.Sorting = service.Value.Sorting;
+			query.CurrentPage = service.Value.CurrentPage;
 
 			return View(query);
 		}
 
 		// GET: Groups/Details/5
+		[Authorize]
 		public async Task<IActionResult> Details(string id)
 		{
 			if (id == null)
@@ -50,24 +49,7 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
-			var groupDetails = await _context.Groups
-				.Where(m => m.Id == id)
-				.Select(g => new GroupDetailsViewModel
-				{
-					Id = g.Id,
-					Name = g.Name,
-					OwnerName = this._context.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
-					Description = g.Description,
-					ImageUrl = g.ImageUrl,
-					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
-					{
-						Email = u.Email,
-						Id = u.Id
-					})
-						.ToList()
-				})
-				.FirstOrDefaultAsync(m => m.Id == id);
-
+			var groupDetails =await _groupsService.Details(id, User);
 
 			if (groupDetails == null)
 			{
@@ -86,7 +68,6 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Create
 		[HttpPost]
-		[ValidateAntiForgeryToken]
 		[Authorize]
 		public async Task<IActionResult> Create(CreateGroupFormModel group)
 		{
@@ -95,39 +76,10 @@ namespace Quizo.Controllers
 				return View(group);
 			}
 
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var isCreated = await this._groupsService.Create(group, this.User);
 
-			var newGroup = new Group
-			{
-				Name = group.Name,
-				ImageUrl = group.ImageUrl,
-				Description = group.Description,
-				OwnerId = userId,
-				Members = new List<IdentityUser>()
-			};
-
-			//TODO:
-
-			/*
-			IdentityUser user = new IdentityUser("Test1");
-			IdentityUser user1 = new IdentityUser("Test2");
-			IdentityUser user2 = new IdentityUser("Test3");
-			IdentityUser user3 = new IdentityUser("Test4");
-			
-			_context.Users.Add(user);
-			_context.Users.Add(user1);
-			_context.Users.Add(user2);
-			_context.Users.Add(user3);*/
-
-			/*
-			newGroup.Members = new List<IdentityUser>
-				{user, user2, user3, user1};
-				*/
-
-			_context.Groups.Add(newGroup);
-			await _context.SaveChangesAsync();
-
-			return RedirectToAction("All", "Groups");
+			return  isCreated ? RedirectToAction("All", "Groups") 
+				: View(group);
 		}
 
 		// GET: Groups/Edit/5
@@ -149,7 +101,6 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Edit/5
 		[HttpPost]
-		[ValidateAntiForgeryToken]
 		[Authorize]
 		public async Task<IActionResult> Edit(string id, string name, string imageUrl,string description)
 		{
@@ -180,7 +131,7 @@ namespace Quizo.Controllers
 					}
 					else
 					{
-						throw;
+						return BadRequest();
 					}
 				}
 				return RedirectToAction(nameof(Details), @group);
@@ -209,7 +160,7 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Delete/5
 		[HttpPost, ActionName("Delete")]
-		[ValidateAntiForgeryToken]
+		[AutoValidateAntiforgeryToken]
 		[Authorize]
 		public async Task<IActionResult> DeleteConfirmed(string id)
 		{
@@ -222,6 +173,48 @@ namespace Quizo.Controllers
 		private bool GroupExists(string id)
 		{
 			return _context.Groups.Any(e => e.Id == id);
+		}
+
+		// GET: Groups/Join/Id
+		[Authorize]
+		public async Task<ActionResult> Join(string id)
+		{
+			if (id == null)
+			{
+				return NotFound();
+			}
+
+			var @group = await _context.Groups.FindAsync(id);
+			if (@group == null)
+			{
+				return NotFound();
+			}
+			return View(new JoinGroupFormModel{Id = id, IsAgreed = false});
+		}
+
+		// POST: Groups/Create/Id
+		[HttpPost]
+		[Authorize]
+		public async Task<IActionResult> Join(string id, bool isAgreed)
+		{
+			//|| !query.IsAgreed
+			if (string.IsNullOrEmpty(id))
+			{
+				return NotFound();
+			}
+
+			Group @group = await this._context.Groups
+				.FirstOrDefaultAsync(g => g.Id == id);
+
+			if (id != @group.Id)
+			{
+				return NotFound();
+			}
+
+			var isJoined = this._groupsService.Join(id, this.User);
+
+			return await isJoined ? RedirectToAction("Details", "Groups", @group)
+				: View(new JoinGroupFormModel { Id = id, IsAgreed = false });
 		}
 	}
 }

@@ -1,0 +1,56 @@
+﻿@model Quizo.Models.Groups.JoinGroupFormModel
+
+@{
+	ViewData["Title"] = "Join";
+}
+
+<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-8 ml-auto mr-auto">
+				<div class="brand">
+					<h2>Join</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="section section-basic">
+	<div class="container">
+
+		<h1>Join</h1>
+
+		<h4>Group</h4>
+		<hr />
+		<div class="row">
+			<div class="text-center">
+				<form asp-action="Join">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<input type="hidden" asp-for="Id" />
+					<div class="form-group">
+						<div class="text-box w-100">
+							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum bibendum maximus consequat. Donec a libero sodales, iaculis magna eu, sagittis tellus. Donec lacinia consequat tellus, nec lobortis turpis vehicula eu. Phasellus velit est, hendrerit vitae orci vitae, sollicitudin pharetra nisi. Ut eget varius orci. Sed varius mi sit amet nibh eleifend, vel tristique arcu eleifend. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sed sodales libero, efficitur viverra est. Aliquam bibendum vel ante eu efficitur. Donec a tortor tortor. Nullam in ultrices mi. Nullam porttitor lorem sit amet urna sodales, quis ornare neque suscipit. Praesent condimentum nisi at eros ultrices dapibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.
+
+							Donec quis est auctor, placerat eros vel, tristique dui. Cras mi nunc, ultricies sed cursus in, tempus eget justo. Duis non nisi bibendum, gravida magna ac, consequat libero. Vivamus sed tincidunt eros, non dignissim dui. Mauris eleifend nisi vel porta varius. Aenean ante arcu, pellentesque id leo non, tincidunt interdum sapien. Donec eget ipsum sit amet augue varius tincidunt pharetra ac est. Aliquam leo nisi, tincidunt non lacus at, mollis scelerisque massa. Phasellus vel lectus venenatis, aliquam nibh at, viverra est. Sed ac ex volutpat, volutpat lorem a, euismod sapien.
+						</div>
+						<h4 class="text-info">Do you agree with the terms?</h4>
+						<input asp-for="IsAgreed" class="form-control" />
+						<span asp-validation-for="IsAgreed" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Join" class="btn btn-primary" />
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div>
+			<a asp-action="All">Back to List</a>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

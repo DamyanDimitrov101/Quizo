@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quizo.Data;
+using Quizo.Data.Models.Identity;
 using Quizo.Infrastructure;
 using Quizo.Services.Groups;
 using Quizo.Services.Groups.Interfaces;
@@ -26,7 +28,7 @@ namespace Quizo
 					Configuration.GetConnectionString("DefaultConnection")));
 			services.AddDatabaseDeveloperPageExceptionFilter();
 
-			services.AddDefaultIdentity<IdentityUser>(options =>
+			services.AddDefaultIdentity<User>(options =>
 				{
 					options.Password.RequireDigit = false;
 					options.Password.RequireLowercase = false;
@@ -34,7 +36,8 @@ namespace Quizo
 					options.Password.RequireNonAlphanumeric = false;
 				})
 				.AddEntityFrameworkStores<QuizoDbContext>();
-			services.AddControllersWithViews();
+			services.AddControllersWithViews(options 
+				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
 
 			services.AddTransient<IGroupsService, GroupsService>();
 		}

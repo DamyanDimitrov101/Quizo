@@ -7,13 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\Data\Migrations\20210811001808_GroupMembers.cs" Link="20210811001808_GroupMembers.cs" />
-    <Compile Include="..\..\..\..\Data\Migrations\20210811001808_GroupMembers.Designer.cs" Link="20210811001808_GroupMembers.Designer.cs" />
-    <Compile Include="..\..\..\..\Data\Migrations\20210811002051_Initial_Groups.cs" Link="20210811002051_Initial_Groups.cs" />
-    <Compile Include="..\..\..\..\Data\Migrations\20210811002051_Initial_Groups.Designer.cs" Link="20210811002051_Initial_Groups.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.8" />
@@ -24,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\MigrationsEF\" />
     <Folder Include="Models\Answers\" />
     <Folder Include="Models\Questions\" />
   </ItemGroup>

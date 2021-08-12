@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
+using Quizo.Data.Models.Identity;
 using Quizo.Models.Identity;
 using static Quizo.Data.DataConstants.Group;
 
@@ -28,6 +29,6 @@ namespace Quizo.Data.Models
 		public string ImageUrl { get; set; }
 
 		public IEnumerable<Question> Questions { get; set; } = new List<Question>();
-		public List<IdentityUser> Members { get; set; } = new List<IdentityUser>();
+		public List<User> Members { get; set; } = new List<User>();
 	}
 }
