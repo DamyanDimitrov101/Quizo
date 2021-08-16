@@ -130,16 +130,35 @@
 
 				<div class="tab-pane" id="tasks-1">
 					<br />
-					@*<a asp-controller="">content</a>
-					*@
-					<br><br>Dynamically innovate resource-leveling customer service for state of the art customer service.
+					@if (!Model.IsOwner)
+					{
+						<a class="btn-success btn"
+						   asp-controller="Questions"
+						   asp-action="Pool"
+						   asp-route-id="@Model.Id">Start!</a>
+
+						<span>Get access to the group quiz.</span>
+					}
+					else
+					{
+						<div class="text-gray">
+							<br />
+
+							<a class="btn-outline-warning btn"
+							   asp-controller="Questions"
+							   asp-action="Add"
+							   asp-route-id="@Model.Id">Add new questions for your mates!</a>
+							<span>Modify the group quiz.</span>
+						</div>
+					}
+					<br><br>
 				</div>
 			</div>
 		</div>
 
 
 		<div>
-			<a asp-action="All">Back to List</a>
+			<a asp-action="All" class="btn btn-default">Back to List</a>
 		</div>
 	</div>
 </div>

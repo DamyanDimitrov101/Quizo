@@ -111,7 +111,7 @@ namespace Quizo.Services.Groups
 		public async Task<GroupDetailsViewModel> Details(string id, ClaimsPrincipal userPrincipal)
 		{
 			var currentUser = await this._userManager.GetUserAsync(userPrincipal);
-
+			
 			GroupDetailsViewModel groupDetails = await _data.Groups
 				.Where(m => m.Id == id)
 				.Select(g => new GroupDetailsViewModel
@@ -129,7 +129,7 @@ namespace Quizo.Services.Groups
 						.ToList()
 				})
 				.FirstOrDefaultAsync(m => m.Id == id);
-
+			
 			return groupDetails;
 		}
 

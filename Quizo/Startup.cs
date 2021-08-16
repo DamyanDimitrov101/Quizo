@@ -11,6 +11,8 @@ using Quizo.Data.Models.Identity;
 using Quizo.Infrastructure;
 using Quizo.Services.Groups;
 using Quizo.Services.Groups.Interfaces;
+using Quizo.Services.Question;
+using Quizo.Services.Question.Interfaces;
 
 namespace Quizo
 {
@@ -39,7 +41,15 @@ namespace Quizo
 			services.AddControllersWithViews(options 
 				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
 
+			services.AddAuthentication()
+				.AddFacebook(fbOptions =>
+				{
+					fbOptions.AppId = Configuration["Authentication:Facebook:AppId"];
+					fbOptions.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+				});
+
 			services.AddTransient<IGroupsService, GroupsService>();
+			services.AddTransient<IQuestionService, QuestionService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

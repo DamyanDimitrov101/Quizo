@@ -91,6 +91,9 @@
 							<button type="submit" class="btn btn-primary btn-lg mb-lg-5">Log in</button>
 						</div>
 					</form>
+
+
+					
 				</div>
 			</div>
 		</div>
@@ -194,4 +197,12 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	
+	<script>
+		function checkLoginState() {
+			FB.getLoginStatus(function(response) {
+				statusChangeCallback(response);
+			});
+		}
+	</script>
 }

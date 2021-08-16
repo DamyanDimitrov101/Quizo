@@ -4,9 +4,17 @@
 	{
 		public class Question
 		{
-			public const int MaxLength = 20;
+			public const int MaxLength = 30;
 			public const int MinLength = 5;
+			public const string LengthErrorMessage = "The {0} must be at least {2} and at max {1} characters long.";
 		}
+		public class Answer
+		{
+			public const int MaxLength = 20;
+			public const int MinLength = 3;
+			public const string LengthErrorMessage = "The {0} must be at least {2} and at max {1} characters long.";
+		}
+
 		public class Group
 		{
 			public const int MaxLength = 35;
