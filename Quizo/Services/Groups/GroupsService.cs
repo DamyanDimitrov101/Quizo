@@ -98,7 +98,7 @@ namespace Quizo.Services.Groups
 				newGroup.Members.Add(user);
 				user.Groups.Add(newGroup);
 
-				_data.Groups.Add(newGroup);
+				_data.Groups.Add(newGroup);	
 				await _data.SaveChangesAsync();
 			}
 			catch (Exception e)

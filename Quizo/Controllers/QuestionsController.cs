@@ -27,10 +27,17 @@ namespace Quizo.Controllers
 			Group @group = await this._context.Groups
 				.FirstOrDefaultAsync(g => g.Id == id);
 
-			var @pool = new PoolViewModel()
+			if(@group is null) return  NotFound();
+
+			var pool = new PoolViewModel()
 			{
 				Group = @group,
-				GroupId = @group.Id
+				GroupId = @group.Id,
+				Questions = _context
+					.Questions
+					.Include(q=>q.Answers)
+					.Where(q=> q.GroupId == id)
+					.ToList()
 			};
 
 			return View(pool);
@@ -40,32 +47,34 @@ namespace Quizo.Controllers
 		{
 			Group @group = await this._context.Groups
 				.FirstOrDefaultAsync(g => g.Id == id);
+			
+			if (@group is null) return NotFound();
+
 			var @question =new AddQuestionFormModel()
 			{
-				Group = @group,
 				GroupId = @group.Id
 			};
+
 			return View(@question);
 		}
 
 		// POST: Questions/Add
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> Add([FromQuery]AddQuestionFormModel question)
+		public async Task<IActionResult> Add(AddQuestionFormModel question)
 		{
-			var errors = ModelState
-				.Where(x => x.Value.Errors.Count > 0)
-				.Select(x => new { x.Key, x.Value.Errors })
-				.ToArray();
-
 			if (!ModelState.IsValid)
 			{
 				return View(question);
 			}
+			Group @group = await this._context.Groups
+				.FirstOrDefaultAsync(g => g.Id == question.GroupId);
 
+			if (@group is null) return NotFound();
+			
 			var isCreated = await this._questionService.Add(question, this.User);
 
-			return isCreated ? RedirectToAction("Details", "Groups", question.Group.Id)
+			return isCreated ? RedirectToAction("Details", "Groups", @group)
 				: View(question);
 		}
 	}

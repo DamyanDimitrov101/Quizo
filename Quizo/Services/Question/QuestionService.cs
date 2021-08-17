@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,9 @@ namespace Quizo.Services.Question
 			{
 				var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
 
-				if (userId != query.Group.OwnerId)
+				var group = _context.Groups.FirstOrDefault(g=>g.Id==query.GroupId);
+
+				if (group==null || userId != group.OwnerId)
 				{
 					return false;
 				}
@@ -34,13 +37,14 @@ namespace Quizo.Services.Question
 				{
 					Value = query.Value,
 					Answers = new List<Answer>(),
-					AuthorId = userId
+					AuthorId = userId,
+					GroupId = group.Id
 				};
 
-				var answerFirst = CreateAnswer(question, query);
-				var answerSecond = CreateAnswer(question, query);
-				var answerThird = CreateAnswer(question, query);
-				var answerFourth = CreateAnswer(question, query);
+				var answerFirst = CreateAnswer(question, query.AnswerFirst);
+				var answerSecond = CreateAnswer(question, query.AnswerSecond);
+				var answerThird = CreateAnswer(question, query.AnswerThird);
+				var answerFourth = CreateAnswer(question, query.AnswerFourth);
 				
 
 				(question.Answers as List<Answer>)?.Add(answerFirst);
@@ -60,13 +64,13 @@ namespace Quizo.Services.Question
 		}
 
 
-		private Answer CreateAnswer(Data.Models.Question question, AddQuestionFormModel query)
+		private Answer CreateAnswer(Data.Models.Question question,string value)
 		{
 			return new Answer()
 			{
 				Question = question,
 				QuestionId = question.Id,
-				Value = query.AnswerFirst
+				Value = value
 			};
 		}
 	}
