@@ -1,4 +1,4 @@
-﻿@model Quizo.Models.Groups.GroupDetailsViewModel
+﻿@model GroupDetailsServiceModel
 
 @{
 	ViewData["Title"] = "Details";
@@ -132,12 +132,26 @@
 					<br />
 					@if (!Model.IsOwner)
 					{
-						<a class="btn-success btn"
-						   asp-controller="Questions"
-						   asp-action="Pool"
-						   asp-route-id="@Model.Id">Start!</a>
+						if (Model.IsJoined)
+						{
+							<a class="btn-success btn"
+							   asp-controller="Questions"
+							   asp-action="Pool"
+							   asp-route-id="@Model.Id">Start!</a>
 
-						<span>Get access to the group quiz.</span>
+							<span>Solve the group quiz.</span>
+						}
+						else
+						{
+							<span class="badge-danger p-2 mb-lg-3"><b>Unfortunately you cannot access the group quiz, join it first!</b></span>
+
+							<a class="btn-info btn mt-3"
+							   asp-controller="Groups"
+							   asp-action="Join"
+							   asp-route-id="@Model.Id">Join now!</a>
+
+							<span>Get access to the group quiz.</span>
+						}
 					}
 					else
 					{

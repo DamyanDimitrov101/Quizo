@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,17 +26,11 @@ namespace Quizo.Controllers
 
 		// GET: Groups
 		[Authorize]
-		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupListingAllViewModel query)
-		{
+		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupsServiceModel query)
+		{ 
 			var service = await this._groupsService.All(query);
-
-			query.Groups = service.Value.Groups;
-			query.TotalGroups = service.Value.TotalGroups;
-			query.SearchTerm= service.Value.SearchTerm;
-			query.Sorting = service.Value.Sorting;
-			query.CurrentPage = service.Value.CurrentPage;
-
-			return View(query);
+			
+			return View(service);
 		}
 
 		// GET: Groups/Details/5
@@ -69,7 +62,7 @@ namespace Quizo.Controllers
 		// POST: Groups/Create
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> Create(CreateGroupFormModel group)
+		public async Task<IActionResult> Create(CreateGroupServiceModel group)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -91,52 +84,28 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
-			var @group = await _context.Groups.FindAsync(id);
-			if (@group == null)
+			var group = await _groupsService.FindAsync(id);
+
+			if (group == null)
 			{
 				return NotFound();
 			}
-			return View(@group);
+
+			return View(group);
 		}
 
 		// POST: Groups/Edit/5
 		[HttpPost]
 		[Authorize]
-		public async Task<IActionResult> Edit(string id, string name, string imageUrl,string description)
+		public async Task<IActionResult> Edit(GroupListingServiceModel query)
 		{
-			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == id);
-
-			if (id != @group.Id)
-			{
-				return NotFound();
-			}
-
 			if (ModelState.IsValid)
 			{
-				try
-				{
-					@group.ImageUrl = imageUrl;
-					@group.Description = description;
-					@group.Name = name;
-
-					_context.Update(@group);
-					await _context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!GroupExists(@group.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						return BadRequest();
-					}
-				}
-				return RedirectToAction(nameof(Details), @group);
+				if (!await this._groupsService.EditAsync(query)) return BadRequest();
+				
+				return RedirectToAction(nameof(Details),new {Id =query.Id});
 			}
-			return View(@group);
+			return View(query);
 		}
 
 		// GET: Groups/Delete/5

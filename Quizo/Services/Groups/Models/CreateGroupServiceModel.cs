@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Quizo.Data.DataConstants.Group;
 
-namespace Quizo.Models.Groups
+namespace Quizo.Services.Groups.Models
 {
-	public class CreateGroupFormModel
+	public class CreateGroupServiceModel
 	{
 		[Required]
 		[StringLength(MaxLength, MinimumLength = MinLength, ErrorMessage = "The name should be at least {2} symbols and no longer than {1}.")]

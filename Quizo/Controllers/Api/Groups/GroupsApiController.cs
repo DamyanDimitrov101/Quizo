@@ -25,8 +25,8 @@ namespace Quizo.Controllers.Api.Groups
 
 
 		[HttpGet]
-		public Task<ActionResult<GroupsServiceModel>> All([FromQuery] AllGroupsApiRequestModel query)	
-			=> this._groups.All(new GroupListingAllViewModel
+		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] AllGroupsApiRequestModel query)	
+			=>await this._groups.All(new GroupsServiceModel()
 			{
 				CurrentPage = query.CurrentPage,
 				SearchTerm = query.SearchTerm,

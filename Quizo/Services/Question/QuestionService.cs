@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using Quizo.Data;
 using Quizo.Data.Models;
 using Quizo.Models.Questions;
@@ -56,22 +55,19 @@ namespace Quizo.Services.Question
 				_context.Questions.Add(question);
 				await _context.SaveChangesAsync();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return false;
 			}
 			return true;
 		}
-
-
-		private Answer CreateAnswer(Data.Models.Question question,string value)
-		{
-			return new Answer()
+		
+		private Answer CreateAnswer(Data.Models.Question question,string value) 
+			=>new()
 			{
 				Question = question,
 				QuestionId = question.Id,
 				Value = value
 			};
-		}
 	}
 }

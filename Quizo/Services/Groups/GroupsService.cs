@@ -27,7 +27,7 @@ namespace Quizo.Services.Groups
 			this._userManager = userManager;
 		}
 
-		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupListingAllViewModel query)
+		public async Task<GroupsServiceModel> All([FromQuery] GroupsServiceModel query)
 		{
 			var groupsQuery = this._data
 				.Groups
@@ -35,8 +35,9 @@ namespace Quizo.Services.Groups
 
 			if (!string.IsNullOrWhiteSpace(query.SearchTerm))
 			{
-				groupsQuery = groupsQuery.Where(g =>
-					g.Name.ToLower().Contains(query.SearchTerm.ToLower()));
+				groupsQuery = groupsQuery
+					.Where(g =>
+						g.Name.ToLower().Contains(query.SearchTerm.ToLower()));
 			}
 
 			groupsQuery = query.Sorting switch
@@ -50,13 +51,14 @@ namespace Quizo.Services.Groups
 			var totalGroups = groupsQuery.Count();
 
 			var groups = await groupsQuery
-				.Skip((query.CurrentPage - 1) * GroupListingAllViewModel.GroupsPerPage)
-				.Take(GroupListingAllViewModel.GroupsPerPage)
-				.Select(g => new GroupListingViewModel
+				.Skip((query.CurrentPage - 1) * GroupsServiceModel.GroupsPerPage)
+				.Take(GroupsServiceModel.GroupsPerPage)
+				.Select(g => new GroupListingServiceModel
 				{
 					Id = g.Id,
 					Name = g.Name,
 					OwnerName = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
+					OwnerId = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Id,
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
 					Members = this._data.Users
@@ -80,7 +82,7 @@ namespace Quizo.Services.Groups
 			};
 		}
 
-		public async Task<bool> Create(CreateGroupFormModel group, ClaimsPrincipal userPrincipal)
+		public async Task<bool> Create(CreateGroupServiceModel group, ClaimsPrincipal userPrincipal)
 		{
 			try
 			{
@@ -101,24 +103,25 @@ namespace Quizo.Services.Groups
 				_data.Groups.Add(newGroup);	
 				await _data.SaveChangesAsync();
 			}
-			catch (Exception e)
+			catch (Exception)
 			{
 				return false;
 			}
 			return true;
 		}
 
-		public async Task<GroupDetailsViewModel> Details(string id, ClaimsPrincipal userPrincipal)
+		public async Task<GroupDetailsServiceModel> Details(string id, ClaimsPrincipal userPrincipal)
 		{
 			var currentUser = await this._userManager.GetUserAsync(userPrincipal);
 			
-			GroupDetailsViewModel groupDetails = await _data.Groups
+			GroupDetailsServiceModel groupDetails = await _data.Groups
 				.Where(m => m.Id == id)
-				.Select(g => new GroupDetailsViewModel
+				.Select(g => new GroupDetailsServiceModel
 				{
 					Id = g.Id,
 					Name = g.Name,
 					IsOwner = currentUser.Id.Equals(g.OwnerId),
+					IsJoined = g.Members.Contains(currentUser),
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
 					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
@@ -145,7 +148,51 @@ namespace Quizo.Services.Groups
 			if (@group.Members .Contains(currentUser)) return false;
 			@group.Members.Add(currentUser);
 			await this._data.SaveChangesAsync();
+			
+			return true;
+		}
 
+		public async Task<GroupListingServiceModel> FindAsync(string id) =>
+			await this._data.Groups
+				.Where(g=> g.Id == id)
+				.Select(g=>new GroupListingServiceModel()
+				{
+					Id = g.Id,
+					Members = g.Members.Select(u=> new UserViewModel()
+					{
+						Name = u.FullName,
+						Id = u.Id,
+						Email = u.Email
+					}).ToList(),
+					OwnerId = g.OwnerId,
+					Description = g.Description,
+					ImageUrl = g.ImageUrl,
+					Name = g.Name,
+					OwnerName = this._data.Users.FirstOrDefault(u=> u.Id == g.OwnerId).FullName,
+					Questions = g.Questions.ToList().AsReadOnly()
+				})
+				.FirstOrDefaultAsync();
+
+		public async Task<bool> EditAsync(GroupListingServiceModel query)
+		{
+			Group @group = await this._data.Groups
+				.FirstOrDefaultAsync(g => g.Id == query.Id);
+
+			if (@group is null) return false;
+
+			try
+			{
+				@group.ImageUrl = query.ImageUrl;
+				@group.Description = query.Description;
+				@group.Name = query.Name;
+
+				this._data.Update(@group);
+				await this._data.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				return false;
+			}
 
 			return true;
 		}

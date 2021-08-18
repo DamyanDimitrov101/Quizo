@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +27,15 @@ namespace Quizo.Controllers
 		{
 			Group @group = await this._context.Groups
 				.FirstOrDefaultAsync(g => g.Id == id);
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-			if(@group is null) return  NotFound();
+			if (@group is null) return  NotFound();
 
 			var pool = new PoolViewModel()
 			{
 				Group = @group,
 				GroupId = @group.Id,
+				IsOwner = @group.OwnerId == userId,
 				Questions = _context
 					.Questions
 					.Include(q=>q.Answers)

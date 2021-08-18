@@ -9,9 +9,11 @@ namespace Quizo.Services.Groups.Interfaces
 {
 	public interface IGroupsService
 	{
-		Task<ActionResult<GroupsServiceModel>>  All([FromQuery] GroupListingAllViewModel query);
-		Task<bool> Create([FromQuery] CreateGroupFormModel query, ClaimsPrincipal userPrincipal);
-		Task<GroupDetailsViewModel> Details(string id, ClaimsPrincipal userPrincipal);
+		Task<GroupsServiceModel>  All([FromQuery] GroupsServiceModel query);
+		Task<bool> Create([FromQuery] CreateGroupServiceModel query, ClaimsPrincipal userPrincipal);
+		Task<GroupDetailsServiceModel> Details(string id, ClaimsPrincipal userPrincipal);
 		Task<bool> Join(string groupId, ClaimsPrincipal userPrincipal);
+		Task<GroupListingServiceModel> FindAsync(string id);
+		Task<bool> EditAsync(GroupListingServiceModel query);
 	}
 }

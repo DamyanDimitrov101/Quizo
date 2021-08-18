@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
-using Quizo.Data.Models.Identity;
 using Quizo.Models.Identity;
 
-namespace Quizo.Models.Groups
+namespace Quizo.Services.Groups.Models
 {
-	public class GroupDetailsViewModel
+	public class GroupDetailsServiceModel
 	{
 		public string Id { get; set; }
 		public string Name { get; set; }
 
 		public bool IsOwner { get; init; }
+		public bool IsJoined { get; set; }
 		
 		public string Description { get; set; }
 
