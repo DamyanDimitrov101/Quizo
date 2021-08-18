@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Quizo.Data.Models.Identity
 
-@model Quizo.Services.Groups.Models.GroupsServiceModel
+@model GroupsServiceModel
 @inject SignInManager<User> signInManager
 
 @{
@@ -59,33 +59,8 @@
 
 		</p>
 
-		<div id="cards_landscape_wrap-2">
-			<div class="container">
-				<div class="row">
-					@foreach (var group in Model.Groups)
-					{
-						<div class="col-sm-6 col-md-3 col-lg-3">
-							<a asp-controller="Groups" asp-action="Details" asp-route-id="@group.Id">
-								<div class="card-flyer">
-									<div class="text-box">
-										<div class="image-box">
-											<img src="@group.ImageUrl" alt="@group.Name @group.OwnerName" />
-										</div>
-										<div class="text-container overflow-hidden card-text">
-											<h6>@group.OwnerName</h6>
-											<h3>@group.Name</h3>
-											<p class="img-container">@group.Description</p>
-										</div>
-									</div>
-								</div>
-							</a>
-						</div>
-					}
-				</div>
-			</div>
-		</div>
-
-
+		<partial name="_GroupList" model="Model.Groups"/>
+		
 
 		<ul class="pagination pagination-info float-right">
 			@{

@@ -1,0 +1,29 @@
+﻿@using Quizo.Data.Models.Identity
+@using Microsoft.AspNetCore.Identity
+@model List<GroupListingServiceModel>
+@inject SignInManager<User> signInManager
+
+
+	@{
+	ViewData["Title"] = "My Groups";
+	}
+
+	@if (!signInManager.IsSignedIn(User))
+	{
+	<script>
+		window.location.href = "/Identity/Account/Login";
+	</script>
+	}
+
+	@{
+	var nav = new NavigationViewModel {Title = ViewData["Title"].ToString()};
+	}
+
+
+<partial name="_NavigationBg" model="@nav" />
+
+<div class="container">
+	<div class="text-dark p-2"><h2 class="title-container">Here you can check all of the groups you created and the ones you joined in...</h2></div>
+
+	<partial name="_GroupList" model="@Model" />
+</div>

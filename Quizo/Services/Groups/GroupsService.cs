@@ -50,27 +50,10 @@ namespace Quizo.Services.Groups
 
 			var totalGroups = groupsQuery.Count();
 
-			var groups = await groupsQuery
+			var groups = await MapToModel(groupsQuery
 				.Skip((query.CurrentPage - 1) * GroupsServiceModel.GroupsPerPage)
-				.Take(GroupsServiceModel.GroupsPerPage)
-				.Select(g => new GroupListingServiceModel
-				{
-					Id = g.Id,
-					Name = g.Name,
-					OwnerName = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
-					OwnerId = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Id,
-					Description = g.Description,
-					ImageUrl = g.ImageUrl,
-					Members = this._data.Users
-						.Where(uv => g.Members.Contains(uv))
-						.Select(u => new UserViewModel
-						{
-							Id = u.Id,
-							Email = u.Email
-						})
-						.ToList()
-				})
-				.ToListAsync();
+				.Take(GroupsServiceModel.GroupsPerPage));
+				
 
 			return new GroupsServiceModel
 			{
@@ -238,5 +221,33 @@ namespace Quizo.Services.Groups
 
 			return false;
 		}
+
+		public Task<List<GroupListingServiceModel>> FindAllByIdAsync(string userId)
+		{
+			return MapToModel(this._data.Groups
+				.Where(g => g.OwnerId == userId 
+				            || g.Members.Any(u=> u.Id == userId)) 
+				.AsQueryable());
+		}
+
+		private async Task<List<GroupListingServiceModel>> MapToModel(IQueryable<Group> groups)
+			=> await groups.Select(g => new GroupListingServiceModel
+				{
+					Id = g.Id,
+					Name = g.Name,
+					OwnerName = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Email,
+					OwnerId = this._data.Users.FirstOrDefault(u => u.Id == g.OwnerId).Id,
+					Description = g.Description,
+					ImageUrl = g.ImageUrl,
+					Members = this._data.Users
+						.Where(uv => g.Members.Contains(uv))
+						.Select(u => new UserViewModel
+						{
+							Id = u.Id,
+							Email = u.Email
+						})
+						.ToList()
+				})
+				.ToListAsync();
 	}
 }

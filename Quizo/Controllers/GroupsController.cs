@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizo.Services.Groups.Interfaces;
@@ -163,6 +164,16 @@ namespace Quizo.Controllers
 
 			return await isJoined ? RedirectToAction(nameof(Details), new {Id = id})
 				: View(new JoinGroupServiceModel { Id = id, IsAgreed = false, IsJoined = true});
+		}
+
+		[Authorize]
+		public async Task<IActionResult> MyGroups()
+		{
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			var groups = await _groupsService.FindAllByIdAsync(userId);
+
+			return View(groups);
 		}
 	}
 }
