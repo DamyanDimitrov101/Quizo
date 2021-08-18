@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Quizo.Data;
 using Quizo.Data.Models;
 using Quizo.Models.Questions;
 using Quizo.Services.Question.Interfaces;
+using Quizo.Services.Question.Models;
 
 namespace Quizo.Services.Question
 {
@@ -17,6 +19,29 @@ namespace Quizo.Services.Question
 		public QuestionService(QuizoDbContext context)
 		{
 			_context = context;
+		}
+		
+		public async Task<PoolViewModel> All(string id, ClaimsPrincipal userPrincipal)
+		{
+			Group @group = await this._context.Groups
+				.FirstOrDefaultAsync(g => g.Id == id);
+			var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+			if (@group is null) return null;
+
+			var pool = new PoolViewModel()
+			{
+				Group = @group,
+				GroupId = @group.Id,
+				IsOwner = @group.OwnerId == userId,
+				Questions = _context
+					.Questions
+					.Include(q => q.Answers)
+					.Where(q => q.GroupId == id)
+					.ToList()
+			};
+
+			return pool;
 		}
 
 		public async Task<bool> Add(AddQuestionFormModel query, ClaimsPrincipal userPrincipal)
@@ -61,7 +86,8 @@ namespace Quizo.Services.Question
 			}
 			return true;
 		}
-		
+
+
 		private Answer CreateAnswer(Data.Models.Question question,string value) 
 			=>new()
 			{

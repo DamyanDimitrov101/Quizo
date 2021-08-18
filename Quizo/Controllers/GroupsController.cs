@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Quizo.Data;
-using Quizo.Data.Models;
-using Quizo.Models.Groups;
 using Quizo.Services.Groups.Interfaces;
 using Quizo.Services.Groups.Models;
 
@@ -16,12 +11,10 @@ namespace Quizo.Controllers
 	public class GroupsController : Controller
 	{
 		private readonly IGroupsService _groupsService;
-		private readonly QuizoDbContext _context;
 
-		public GroupsController(IGroupsService groupsService, QuizoDbContext context)
+		public GroupsController(IGroupsService groupsService)
 		{
 			_groupsService = groupsService;
-			_context = context;
 		}
 
 		// GET: Groups
@@ -101,9 +94,9 @@ namespace Quizo.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				if (!await this._groupsService.EditAsync(query)) return BadRequest();
+				if (!await this._groupsService.EditAsync(query, this.User)) return BadRequest();
 				
-				return RedirectToAction(nameof(Details),new {Id =query.Id});
+				return RedirectToAction(nameof(Details),new {query.Id});
 			}
 			return View(query);
 		}
@@ -117,14 +110,14 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
-			var @group = await _context.Groups
-				.FirstOrDefaultAsync(m => m.Id == id);
-			if (@group == null)
+			var group = await _groupsService.FindAsync(id);
+
+			if (group == null)
 			{
 				return NotFound();
 			}
 
-			return View(@group);
+			return View(group);
 		}
 
 		// POST: Groups/Delete/5
@@ -133,17 +126,11 @@ namespace Quizo.Controllers
 		[Authorize]
 		public async Task<IActionResult> DeleteConfirmed(string id)
 		{
-			var @group = await _context.Groups.FindAsync(id);
-			_context.Groups.Remove(@group);
-			await _context.SaveChangesAsync();
+			if (! await this._groupsService.DeleteAsync(id, this.User)) return BadRequest();
+
 			return RedirectToAction(nameof(All));
 		}
-
-		private bool GroupExists(string id)
-		{
-			return _context.Groups.Any(e => e.Id == id);
-		}
-
+		
 		// GET: Groups/Join/Id
 		[Authorize]
 		public async Task<ActionResult> Join(string id)
@@ -152,13 +139,13 @@ namespace Quizo.Controllers
 			{
 				return NotFound();
 			}
-
-			var @group = await _context.Groups.FindAsync(id);
-			if (@group == null)
+			
+			return View(new JoinGroupServiceModel
 			{
-				return NotFound();
-			}
-			return View(new JoinGroupFormModel{Id = id, IsAgreed = false});
+				Id = id, 
+				IsAgreed = false, 
+				IsJoined = await this._groupsService.UserIsJoined(id,this.User)
+			});
 		}
 
 		// POST: Groups/Create/Id
@@ -172,18 +159,10 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
-			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == id);
-
-			if (id != @group.Id)
-			{
-				return NotFound();
-			}
-
 			var isJoined = this._groupsService.Join(id, this.User);
 
-			return await isJoined ? RedirectToAction("Details", "Groups", @group)
-				: View(new JoinGroupFormModel { Id = id, IsAgreed = false });
+			return await isJoined ? RedirectToAction(nameof(Details), new {Id = id})
+				: View(new JoinGroupServiceModel { Id = id, IsAgreed = false, IsJoined = true});
 		}
 	}
 }

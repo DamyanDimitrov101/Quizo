@@ -1,13 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Quizo.Models.Groups
+namespace Quizo.Services.Groups.Models
 {
-	public class JoinGroupFormModel
+	public class JoinGroupServiceModel
 	{
 		[Required]
 		public string Id { get; set; }
 		
 		[Required]
 		public bool IsAgreed { get; set; } = false;
+
+		[Required]
+		public bool IsJoined { get; set; } = false;
 	}
 }

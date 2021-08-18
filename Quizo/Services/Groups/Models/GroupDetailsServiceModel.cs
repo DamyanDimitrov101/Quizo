@@ -10,6 +10,7 @@ namespace Quizo.Services.Groups.Models
 
 		public bool IsOwner { get; init; }
 		public bool IsJoined { get; set; }
+		public bool HasQuestions { get; set; }
 		
 		public string Description { get; set; }
 

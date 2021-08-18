@@ -1,28 +1,19 @@
 ﻿@page
+@using Quizo.Models
 @model RegisterModel
 @{
 	ViewData["Title"] = "Register";
 }
 
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>Register!</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+@{
+	var nav = new NavigationViewModel { Title = ViewData["Title"].ToString() };
+}
+
+<partial name="_NavigationBg" model="@nav" />
 
 
-
-
-
-
-<div class="section section-signup page-header h-100 p-lg-5" data-parallax="true" 
-     style="background-image: url('/assets/img/bg10.jpg');">
+<div class="section section-signup page-header h-100 p-lg-5" data-parallax="true"
+	 style="background-image: url('/assets/img/bg10.jpg');">
 	<div class="container mt-lg-5">
 		<div class="row mt-lg-5 mt-lg-5">
 			<div class="col-lg-4 col-md-6 mx-auto">
@@ -97,13 +88,13 @@
 							</span>
 
 						</div>
-						
+
 						<div class="form-group text-center">
 							<p>
 								<a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Already have an account?</a>
 							</p>
 						</div>
-						
+
 						<div class="footer text-center">
 							<button type="submit" class="btn btn-primary btn-link btn-lg mb-lg-5">Get Started</button>
 						</div>

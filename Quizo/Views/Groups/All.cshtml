@@ -2,36 +2,29 @@
 @using Quizo.Data.Models.Identity
 
 @model Quizo.Services.Groups.Models.GroupsServiceModel
-@inject SignInManager<User> SignInManager
+@inject SignInManager<User> signInManager
 
 @{
-	ViewData["Title"] = "All Groups";
+	ViewData["Title"] = "All";
 }
 
-@if (!SignInManager.IsSignedIn(User))
+@if (!signInManager.IsSignedIn(User))
 {
 	<script>
 		window.location.href = "/Identity/Account/Login";
 	</script>
 }
 
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
+@{
+	var nav = new NavigationViewModel {Title = ViewData["Title"].ToString()};
+}
+
+<partial name="_NavigationBg"model="@nav"/>
+
+
+<div class="section">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>All</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-
-<div class="section section-basic">
-	<div class="container">
-		<h1>Groups</h1>
+		<h1 class="text-center">Groups</h1>
 
 		<form method="get">
 			<div class="row">
@@ -43,7 +36,7 @@
 				<div class="form-group w-50">
 					<div class="form-group">
 						<label asp-for="Sorting"></label>
-						<select asp-for="Sorting" class="form-control">
+						<select asp-for="Sorting" class="form-control dropdown" data-togle="dropdown">
 							<option value="0" selected>Date Created</option>
 							<option value="1">Name</option>
 							<option value="2">Most members</option>
@@ -71,7 +64,7 @@
 				<div class="row">
 					@foreach (var group in Model.Groups)
 					{
-						<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+						<div class="col-sm-6 col-md-3 col-lg-3">
 							<a asp-controller="Groups" asp-action="Details" asp-route-id="@group.Id">
 								<div class="card-flyer">
 									<div class="text-box">
@@ -193,10 +186,10 @@
 				<div class="row text-center">
 					<div class="col-md-8 mx-auto">
 						<h2>Any questions?</h2>
-						<h4>Integer eu sem non sapien maximus malesuada elementum iaculis magna. Nam semper molestie nulla. Suspendisse potenti. Etiam consequat tempus ligula in lobortis. Quisque ante mi, feugiat ac magna quis, iaculis tincidunt magna. Nam mi felis, vehicula sit amet suscipit a, lobortis sit amet elit. Aliquam porta eros at bibendum viverra. Integer faucibus metus justo, et interdum augue pretium et. Donec odio urna, tincidunt quis velit ut, ultrices egestas ligula. Quisque sit amet auctor sem. Ut elit felis, tristique sed elit sed, cursus tincidunt nunc. Duis vel dui nec magna convallis cursus. Nunc faucibus, metus vel dapibus malesuada, ex mi congue ipsum, eget luctus leo nisl a nisi. Morbi efficitur vitae felis non volutpat. Ut sit amet feugiat sapien, non convallis diam..</h4>
+						<h4 class="text-secondary">Integer eu sem non sapien maximus malesuada elementum iaculis magna. Nam semper molestie nulla. Suspendisse potenti. Etiam consequat tempus ligula in lobortis. Quisque ante mi, feugiat ac magna quis, iaculis tincidunt magna. Nam mi felis, vehicula sit amet suscipit a, lobortis sit amet elit. Aliquam porta eros at bibendum viverra. Integer faucibus metus justo, et interdum augue pretium et. Donec odio urna, tincidunt quis velit ut, ultrices egestas ligula. Quisque sit amet auctor sem. Ut elit felis, tristique sed elit sed, cursus tincidunt nunc. Duis vel dui nec magna convallis cursus. Nunc faucibus, metus vel dapibus malesuada, ex mi congue ipsum, eget luctus leo nisl a nisi. Morbi efficitur vitae felis non volutpat. Ut sit amet feugiat sapien, non convallis diam..</h4>
 					</div>
 					<div class="col-sm-8 col-md-5 mx-auto">
-						<a href="https://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-mk-demos" class="btn btn-info btn-upgrade btn-lg" target="_blank">
+						<a href="https://www.google.com/search?q=google&oq=google&aqs=chrome..69i57j35i39j0i512j69i60j69i65l2j69i60l2.5861j1j7&sourceid=chrome&ie=UTF-8" class="btn btn-info btn-outline-info btn-lg" target="_blank">
 							<i class="material-icons">contact_support</i> Ask here
 						</a>
 					</div>

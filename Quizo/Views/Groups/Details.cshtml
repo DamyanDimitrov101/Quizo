@@ -3,32 +3,35 @@
 @{
 	ViewData["Title"] = "Details";
 }
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
+
+@{
+	var nav = new NavigationViewModel { Title = ViewData["Title"].ToString() + $" {Model.Name}" };
+}
+
+<partial name="_NavigationBg" model="@nav" />
+
+<div class="section">
 	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>Info</h2>
+		@if (Model.HasQuestions)
+		{
+			<div class="alert alert-info">
+				<div class="container">
+					<div class="alert-icon">
+						<i class="material-icons">info_outline</i>
+					</div>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true"><i class="material-icons">clear</i></span>
+					</button>
+					<b>
+						<span>
+							<a asp-controller="Questions"
+							   asp-action="Pool"
+							   asp-route-id="@Model.Id">Start the quiz:</a>
+						</span>
+					</b> You've got some questions to answer, begin your test now...
 				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
-
-<div class="section section-basic">
-	<div class="container">
-		<div class="alert alert-info">
-			<div class="container">
-				<div class="alert-icon">
-					<i class="material-icons">info_outline</i>
-				</div>
-				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-					<span aria-hidden="true"><i class="material-icons">clear</i></span>
-				</button>
-				<b>Start the quiz: </b> You've got some questions to answer, begin your test now...
-			</div>
-		</div>
+		}
 
 		<h1>@Model.Name Details</h1>
 
@@ -74,11 +77,13 @@
 			<div class="tab-content tab-space">
 				<div class="tab-pane active show" id="dashboard-1">
 					<br />
-					@Model.Description
+					<span class="text-secondary"> @Model.Description </span>
 					<br><br>
 					@if (Model.IsOwner)
 					{
-						<h5>You are the owner of this group.</h5>
+						<h5 class="bg-primary text-white font-weight-bold p-2">
+							You are the owner of this group.
+						</h5>
 					}
 				</div>
 
@@ -119,12 +124,19 @@
 					}
 					else
 					{
-						<br />
-						<a class="btn-success btn"
-						   asp-controller="Groups"
-						   asp-action="Join"
-						   asp-route-id="@Model.Id">Join this group now!</a>
-						<span>Get access to the group quiz.</span>
+						if (Model.IsJoined)
+						{
+							<span class="info-title">You are already member of this group!</span>
+						}
+						else
+						{
+							<br />
+							<a class="btn-success btn"
+							   asp-controller="Groups"
+							   asp-action="Join"
+							   asp-route-id="@Model.Id">Join this group now!</a>
+							<span>Get access to the group quiz.</span>
+						}
 					}
 				</div>
 

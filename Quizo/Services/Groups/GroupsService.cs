@@ -122,6 +122,7 @@ namespace Quizo.Services.Groups
 					Name = g.Name,
 					IsOwner = currentUser.Id.Equals(g.OwnerId),
 					IsJoined = g.Members.Contains(currentUser),
+					HasQuestions = g.Questions.Any(),
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
 					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
@@ -173,12 +174,14 @@ namespace Quizo.Services.Groups
 				})
 				.FirstOrDefaultAsync();
 
-		public async Task<bool> EditAsync(GroupListingServiceModel query)
+		public async Task<bool> EditAsync(GroupListingServiceModel query, ClaimsPrincipal userPrincipal)
 		{
+			var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
 			Group @group = await this._data.Groups
 				.FirstOrDefaultAsync(g => g.Id == query.Id);
 
 			if (@group is null) return false;
+			if (@group.OwnerId != userId) return false;
 
 			try
 			{
@@ -195,6 +198,45 @@ namespace Quizo.Services.Groups
 			}
 
 			return true;
+		}
+
+		public async Task<bool> DeleteAsync(string id, ClaimsPrincipal userPrincipal)
+		{
+			var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+			
+			try
+			{
+				var @group = await _data.Groups.FindAsync(id);
+				
+				if (@group is null) return false;
+				if (@group.OwnerId != userId) return false;
+
+				this._data.Groups.Remove(@group);
+				await this._data.SaveChangesAsync();
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public async Task<bool> UserIsJoined(string id,ClaimsPrincipal user)
+		{
+			var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
+			var @group = await _data.Groups
+				.Include(g=> g.Members)
+				.FirstOrDefaultAsync(g=> g.Id==id);
+
+			if (@group is null) return false;
+
+			if (@group.Members.FirstOrDefault(m=> m.Id == userId) != null)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

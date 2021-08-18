@@ -4,17 +4,11 @@
 	ViewData["Title"] = "Add";
 }
 
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>Add</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+@{
+	var nav = new NavigationViewModel { Title = ViewData["Title"].ToString() };
+}
+
+<partial name="_NavigationBg" model="@nav" />
 
 
 

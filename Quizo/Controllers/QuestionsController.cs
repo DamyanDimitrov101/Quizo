@@ -1,11 +1,6 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Quizo.Data;
-using Quizo.Data.Models;
 using Quizo.Models.Questions;
 using Quizo.Services.Question.Interfaces;
 
@@ -15,50 +10,28 @@ namespace Quizo.Controllers
 	public class QuestionsController : Controller
 	{
 		private readonly IQuestionService _questionService;
-		private readonly QuizoDbContext _context;
 
-		public QuestionsController(QuizoDbContext context, IQuestionService questionService)
+		public QuestionsController(IQuestionService questionService)
 		{
-			this._context = context;
 			this._questionService = questionService;
 		}
 
 		public async Task<IActionResult> Pool(string id)
 		{
-			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == id);
-			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			if (id is null) return NotFound();
 
-			if (@group is null) return  NotFound();
+			var pool = this._questionService.All(id, this.User);
 
-			var pool = new PoolViewModel()
-			{
-				Group = @group,
-				GroupId = @group.Id,
-				IsOwner = @group.OwnerId == userId,
-				Questions = _context
-					.Questions
-					.Include(q=>q.Answers)
-					.Where(q=> q.GroupId == id)
-					.ToList()
-			};
+			if (pool is null) return BadRequest();
 
-			return View(pool);
+			return View(await pool);
 		}
 
 		public async Task<IActionResult> Add(string id)
 		{
-			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == id);
-			
-			if (@group is null) return NotFound();
+			if (id is null) return NotFound();
 
-			var @question =new AddQuestionFormModel()
-			{
-				GroupId = @group.Id
-			};
-
-			return View(@question);
+			return View(new AddQuestionFormModel(){GroupId = id});
 		}
 
 		// POST: Questions/Add
@@ -70,14 +43,12 @@ namespace Quizo.Controllers
 			{
 				return View(question);
 			}
-			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == question.GroupId);
-
-			if (@group is null) return NotFound();
+			
+			if (question.GroupId is null) return NotFound();
 			
 			var isCreated = await this._questionService.Add(question, this.User);
 
-			return isCreated ? RedirectToAction("Details", "Groups", @group)
+			return isCreated ? RedirectToAction("Details", "Groups", new {Id = question.GroupId})
 				: View(question);
 		}
 	}

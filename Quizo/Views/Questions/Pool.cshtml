@@ -4,17 +4,11 @@
 	ViewData["Title"] = "Pool";
 }
 
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>Quiz @Model.Group.Name</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+@{
+	var nav = new NavigationViewModel { Title = ViewData["Title"].ToString() };
+}
+
+<partial name="_NavigationBg" model="@nav" />
 
 <div class="section" id="carousel">
 	<div class="container">
@@ -60,7 +54,7 @@
 											<i class="material-icons">quiz</i>
 											@Model.Questions.ToList()[0].Value
 										</h4>
-										
+
 										@foreach (var answer in Model.Questions.ToList()[0].Answers)
 										{
 											<a class="btn btn-block text-white text-xl-center"
@@ -95,25 +89,25 @@
 									</div>
 								}
 								@*
-						<div class="carousel-item active">
-							<img class="d-block w-100" src="/assets/img/bg.jpg" alt="First slide">
-							<div class="carousel-caption d-none d-md-block">
-								<h4>
-									<i class="material-icons">location_on</i>
-									Yellowstone National Park, United States
-								</h4>
-							</div>
-						</div>
+									<div class="carousel-item active">
+										<img class="d-block w-100" src="/assets/img/bg.jpg" alt="First slide">
+										<div class="carousel-caption d-none d-md-block">
+											<h4>
+												<i class="material-icons">location_on</i>
+												Yellowstone National Park, United States
+											</h4>
+										</div>
+									</div>
 								*@
 								@*<div class="carousel-item">
-							<img class="d-block w-100" src="/assets/img/bg3.jpg" alt="Second slide">
-							<div class="carousel-caption d-none d-md-block">
-								<h4>
-									<i class="material-icons">location_on</i>
-									Somewhere Beyond, United States
-								</h4>
-							</div>
-						</div>*@
+										<img class="d-block w-100" src="/assets/img/bg3.jpg" alt="Second slide">
+										<div class="carousel-caption d-none d-md-block">
+											<h4>
+												<i class="material-icons">location_on</i>
+												Somewhere Beyond, United States
+											</h4>
+										</div>
+									</div>*@
 							</div>
 							<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
 								<i class="material-icons">keyboard_arrow_left</i>

@@ -4,56 +4,50 @@
 	ViewData["Title"] = "Edit";
 }
 
-<div class="page-header header-filter clear-filter purple-filter h-25" data-parallax="true" style="background-image: url('/assets/img/bgg.jpg');">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-8 ml-auto mr-auto">
-				<div class="brand">
-					<h2>Edit</h2>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+@{
+	var nav = new NavigationViewModel { Title = ViewData["Title"].ToString() };
+}
+
+<partial name="_NavigationBg" model="@nav" />
 
 <div class="section">
-<div class="container">
+	<div class="container">
 
-<h1>Edit</h1>
+		<h1>Edit</h1>
 
-<h4>Group</h4>
-<hr />
-<div class="row">
-	<div class="col-md-4">
-		<form asp-action="Edit">
-			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
-			<input type="hidden" asp-for="Id" />
-			<div class="form-group">
-				<label asp-for="Name" class="control-label"></label>
-				<input asp-for="Name" class="form-control" />
-				<span asp-validation-for="Name" class="text-danger"></span>
+		<h4>@Model.Name</h4>
+		<hr />
+		<div class="row">
+			<div class="col-md-4">
+				<form asp-action="Edit">
+					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+					<input type="hidden" asp-for="Id" />
+					<div class="form-group">
+						<label asp-for="Name" class="control-label"></label>
+						<input asp-for="Name" class="form-control" />
+						<span asp-validation-for="Name" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="ImageUrl" class="control-label"></label>
+						<input asp-for="ImageUrl" class="form-control" />
+						<span asp-validation-for="ImageUrl" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<label asp-for="Description" class="control-label"></label>
+						<input asp-for="Description" class="form-control text-box" />
+						<span asp-validation-for="Description" class="text-danger"></span>
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Save" class="btn btn-primary" />
+					</div>
+				</form>
 			</div>
-			<div class="form-group">
-				<label asp-for="ImageUrl" class="control-label"></label>
-				<input asp-for="ImageUrl" class="form-control" />
-				<span asp-validation-for="ImageUrl" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<label asp-for="Description" class="control-label"></label>
-				<input asp-for="Description" class="form-control text-box" />
-				<span asp-validation-for="Description" class="text-danger"></span>
-			</div>
-			<div class="form-group">
-				<input type="submit" value="Save" class="btn btn-primary" />
-			</div>
-		</form>
+		</div>
+
+		<div>
+			<a asp-action="All" class="btn btn-default">Back to List</a>
+		</div>
 	</div>
-</div>
-
-<div>
-	<a asp-action="All" class="btn btn-default">Back to List</a>
-</div>
-</div>
 </div>
 
 @section Scripts {

@@ -2,7 +2,7 @@
 using Quizo.Data.Models;
 using Quizo.Data.Models.Identity;
 
-namespace Quizo.Models.Questions
+namespace Quizo.Services.Question.Models
 {
 	public class PoolViewModel
 	{
@@ -11,7 +11,7 @@ namespace Quizo.Models.Questions
 		public User User { get; set; }
 		public string UserId { get; set; }
 		public bool IsOwner { get; set; }
-		public IEnumerable<Question> Questions { get; set; } = new List<Question>();
+		public IEnumerable<Data.Models.Question> Questions { get; set; } = new List<Data.Models.Question>();
 		public IEnumerable<Answer> CurrentAnswers { get; set; } = new List<Answer>();
 	}
 }
