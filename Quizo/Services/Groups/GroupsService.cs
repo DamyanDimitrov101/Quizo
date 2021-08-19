@@ -164,7 +164,7 @@ namespace Quizo.Services.Groups
 				.FirstOrDefaultAsync(g => g.Id == query.Id);
 
 			if (@group is null) return false;
-			if (@group.OwnerId != userId) return false;
+			if (@group.OwnerId != userId && !userPrincipal.IsInRole("Admin")) return false;
 
 			try
 			{
@@ -192,7 +192,7 @@ namespace Quizo.Services.Groups
 				var @group = await _data.Groups.FindAsync(id);
 				
 				if (@group is null) return false;
-				if (@group.OwnerId != userId) return false;
+				if (@group.OwnerId != userId && !userPrincipal.IsInRole("Admin")) return false;
 
 				this._data.Groups.Remove(@group);
 				await this._data.SaveChangesAsync();
@@ -224,6 +224,9 @@ namespace Quizo.Services.Groups
 
 		public Task<List<GroupListingServiceModel>> FindAllByIdAsync(string userId)
 		{
+			if (userId == "") 
+				return MapToModel(this._data.Groups.AsQueryable());
+			
 			return MapToModel(this._data.Groups
 				.Where(g => g.OwnerId == userId 
 				            || g.Members.Any(u=> u.Id == userId)) 

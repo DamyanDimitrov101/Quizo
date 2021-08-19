@@ -160,6 +160,11 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
+			if (this.User.IsInRole("Admin"))
+			{
+				return Unauthorized();
+			}
+
 			var isJoined = this._groupsService.Join(id, this.User);
 
 			return await isJoined ? RedirectToAction(nameof(Details), new {Id = id})

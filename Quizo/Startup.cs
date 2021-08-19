@@ -25,23 +25,29 @@ namespace Quizo
 
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddDbContext<QuizoDbContext>(options =>
-				options.UseSqlServer(
+			services
+				.AddDbContext<QuizoDbContext>(options =>
+					options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
-			services.AddDatabaseDeveloperPageExceptionFilter();
+			services
+				.AddDatabaseDeveloperPageExceptionFilter();
 
-			services.AddDefaultIdentity<User>(options =>
+			services
+				.AddDefaultIdentity<User>(options =>
 				{
 					options.Password.RequireDigit = false;
 					options.Password.RequireLowercase = false;
 					options.Password.RequireUppercase = false;
 					options.Password.RequireNonAlphanumeric = false;
 				})
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<QuizoDbContext>();
-			services.AddControllersWithViews(options 
+			services
+				.AddControllersWithViews(options 
 				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
 
-			services.AddAuthentication()
+			services
+				.AddAuthentication()
 				.AddFacebook(fbOptions =>
 				{
 					fbOptions.AppId = Configuration["Authentication:Facebook:AppId"];
