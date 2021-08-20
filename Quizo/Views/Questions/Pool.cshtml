@@ -62,10 +62,11 @@
 											<i class="material-icons">quiz</i>
 											@question.Value
 										</h4>
-										<form method="post" asp-controller="Answers" asp-action="Respond">
 											
 											@foreach (var answer in question.Answers)
 											{
+												<form method="post" asp-controller="Answers" asp-action="Respond">
+
 												<input asp-for="CurrentQuestionId" type="hidden" class="form-control" value="@question.Id"/>
 												<input asp-for="CurrentAnswerId" type="hidden" class="form-control" value="@answer.Id"/>
 												<input asp-for="GroupId" type="hidden" class="form-control" value="@Model.GroupId"/>
@@ -76,8 +77,9 @@
 													value="@answer.Value"
 												/>
 
+												</form>
+
 											}
-										</form>
 									</div>
 								</div>
 

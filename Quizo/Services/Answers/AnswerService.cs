@@ -17,7 +17,7 @@ namespace Quizo.Services.Answers
 		public bool IsTheCorrectAnswer(string questionId, string answerId)
 		{
 			var question = _data.Questions.Find(questionId);
-			var answer = _data.Answers.Find(questionId);
+			var answer = _data.Answers.Find(answerId);
 
 			if (question is null) return false;
 			if (answer is null) return false;
