@@ -12,7 +12,7 @@
 
 
 
-<div class="section section-basic">
+<div class="section">
 	<div class="container">
 		<h1>Add Question</h1>
 
@@ -22,29 +22,29 @@
 				<form asp-action="Add" asp-controller="Questions">
 					<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 					<input type="hidden" asp-for="GroupId" />
-					<div class="form-group">
-						<label asp-for="Value" class="control-label"></label>
+					<div class="form-group alert-primary">
+						<label asp-for="Value"></label>
 						<input asp-for="Value" id="Value" name="Value" class="form-control" />
 						<span asp-validation-for="Value" class="text-danger"></span>
 					</div>
-					<div class="form-group">
-						<label asp-for="AnswerFirst" class="control-label"></label>
+					<div class="form-group alert-success">
+						<label asp-for="AnswerFirst"></label>
 						<input asp-for="AnswerFirst" class="form-control" />
 						<span asp-validation-for="AnswerFirst" class="text-danger"></span>
 					</div>
 					<div class="form-group">
-						<label asp-for="AnswerSecond" class="control-label"></label>
+						<label asp-for="AnswerSecond"></label>
 						<input asp-for="AnswerSecond" class="form-control" />
 						<span asp-validation-for="AnswerSecond" class="text-danger"></span>
 					</div>
 
 					<div class="form-group">
-						<label asp-for="AnswerThird" class="control-label"></label>
+						<label asp-for="AnswerThird"></label>
 						<input asp-for="AnswerThird" class="form-control" />
 						<span asp-validation-for="AnswerThird" class="text-danger"></span>
 					</div>
 					<div class="form-group">
-						<label asp-for="AnswerFourth" class="control-label"></label>
+						<label asp-for="AnswerFourth"></label>
 						<input asp-for="AnswerFourth" class="form-control" />
 						<span asp-validation-for="AnswerFourth" class="text-danger"></span>
 					</div>

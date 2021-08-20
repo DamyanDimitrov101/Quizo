@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Quizo.Data;
 using Quizo.Data.Models;
@@ -21,10 +22,12 @@ namespace Quizo.Services.Question
 			_context = context;
 		}
 		
-		public async Task<PoolViewModel> All(string id, ClaimsPrincipal userPrincipal)
+		public async Task<PoolViewModel> All(
+			[FromQuery]PoolViewModel query, 
+			ClaimsPrincipal userPrincipal)
 		{
 			Group @group = await this._context.Groups
-				.FirstOrDefaultAsync(g => g.Id == id);
+				.FirstOrDefaultAsync(g => g.Id == query.GroupId);
 			var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			if (@group is null) return null;
@@ -33,11 +36,12 @@ namespace Quizo.Services.Question
 			{
 				Group = @group,
 				GroupId = @group.Id,
+				CurrentQuestion = query.CurrentQuestion,
 				IsOwner = @group.OwnerId == userId,
 				Questions = _context
 					.Questions
 					.Include(q => q.Answers)
-					.Where(q => q.GroupId == id)
+					.Where(q => q.GroupId == query.GroupId)
 					.ToList()
 			};
 
@@ -75,9 +79,19 @@ namespace Quizo.Services.Question
 				(question.Answers as List<Answer>)?.Add(answerSecond);
 				(question.Answers as List<Answer>)?.Add(answerThird);
 				(question.Answers as List<Answer>)?.Add(answerFourth);
-
-
+				
 				_context.Questions.Add(question);
+
+				var correctAnswer = new CorrectAnswers
+				{
+					AnswerId = answerFirst.Id,
+					Answer = answerFirst,
+					QuestionId = question.Id,
+					Question = question
+				};
+
+				_context.CorrectAnswers.Add(correctAnswer);
+
 				await _context.SaveChangesAsync();
 			}
 			catch (Exception)
@@ -95,5 +109,10 @@ namespace Quizo.Services.Question
 				QuestionId = question.Id,
 				Value = value
 			};
+
+		public string GetGroupId(string questionId)
+			=> this._context.Questions
+				?.Find(questionId)
+				.GroupId;
 	}
 }

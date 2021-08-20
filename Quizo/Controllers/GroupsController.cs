@@ -65,7 +65,7 @@ namespace Quizo.Controllers
 
 			var isCreated = await this._groupsService.Create(group, this.User);
 
-			return  isCreated ? RedirectToAction("All", "Groups") 
+			return  isCreated ? RedirectToAction(nameof(All), "Groups") 
 				: View(group);
 		}
 

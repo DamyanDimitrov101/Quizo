@@ -11,6 +11,7 @@ namespace Quizo.Data
 		public DbSet<Answer> Answers { get; init; }
 		public DbSet<Group> Groups { get; init; }
 		public DbSet<UserGroups> UserGroups { get; init; }
+		public DbSet<CorrectAnswers> CorrectAnswers { get; init; }
 		
 		public QuizoDbContext(DbContextOptions<QuizoDbContext> options)
 			: base(options)

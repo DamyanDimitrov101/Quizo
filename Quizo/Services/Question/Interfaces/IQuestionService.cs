@@ -9,6 +9,7 @@ namespace Quizo.Services.Question.Interfaces
 	public interface IQuestionService
 	{
 		Task<bool> Add([FromQuery] AddQuestionFormModel query, ClaimsPrincipal userPrincipal);
-		Task<PoolViewModel> All(string id, ClaimsPrincipal userPrincipal);
+		Task<PoolViewModel> All([FromQuery]PoolViewModel query, ClaimsPrincipal userPrincipal);
+		string GetGroupId(string questionId);
 	}
 }

@@ -9,6 +9,8 @@ using Microsoft.Extensions.Hosting;
 using Quizo.Data;
 using Quizo.Data.Models.Identity;
 using Quizo.Infrastructure;
+using Quizo.Services.Answers;
+using Quizo.Services.Answers.Interfaces;
 using Quizo.Services.Groups;
 using Quizo.Services.Groups.Interfaces;
 using Quizo.Services.Question;
@@ -56,6 +58,7 @@ namespace Quizo
 
 			services.AddTransient<IGroupsService, GroupsService>();
 			services.AddTransient<IQuestionService, QuestionService>();
+			services.AddTransient<IAnswerService, AnswerService>();
 		}
 
 		public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

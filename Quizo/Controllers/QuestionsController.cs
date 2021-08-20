@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizo.Models.Questions;
 using Quizo.Services.Question.Interfaces;
+using Quizo.Services.Question.Models;
 
 namespace Quizo.Controllers
 {
@@ -16,15 +17,16 @@ namespace Quizo.Controllers
 			this._questionService = questionService;
 		}
 
-		public async Task<IActionResult> Pool(string id)
+		public async Task<IActionResult> Pool([FromQuery]PoolViewModel query)
 		{
-			if (id is null) return NotFound();
+			if (query is null) return NotFound();
+			//if (query.CurrentQuestion < 0) query.CurrentQuestion = 0;
 
-			var pool = this._questionService.All(id, this.User);
-
+			var pool =await this._questionService.All(query, this.User);
 			if (pool is null) return BadRequest();
 
-			return View(await pool);
+
+			return View(pool);
 		}
 
 		public async Task<IActionResult> Add(string id)
@@ -49,7 +51,9 @@ namespace Quizo.Controllers
 			var isCreated = await this._questionService.Add(question, this.User);
 
 			return isCreated ? RedirectToAction("Details", "Groups", new {Id = question.GroupId})
-				: View(question);
+				: View(question);	
 		}
+
+		
 	}
 }
