@@ -13,6 +13,7 @@ using Quizo.Models.Groups;
 using Quizo.Models.Identity;
 using Quizo.Services.Groups.Interfaces;
 using Quizo.Services.Groups.Models;
+using AutoMapper;
 
 namespace Quizo.Services.Groups
 {
@@ -20,11 +21,16 @@ namespace Quizo.Services.Groups
 	{
 		private readonly QuizoDbContext _data;
 		private readonly UserManager<User> _userManager;
+		private readonly IMapper _mapper;
 
-		public GroupsService(QuizoDbContext data, UserManager<User> userManager)
+		public GroupsService(
+			QuizoDbContext data,
+			UserManager<User> userManager, 
+			IMapper mapper)
 		{
 			this._data = data;
 			this._userManager = userManager;
+			this._mapper = mapper;
 		}
 
 		public async Task<GroupsServiceModel> All([FromQuery] GroupsServiceModel query)
@@ -53,16 +59,12 @@ namespace Quizo.Services.Groups
 			var groups = await MapToModel(groupsQuery
 				.Skip((query.CurrentPage - 1) * GroupsServiceModel.GroupsPerPage)
 				.Take(GroupsServiceModel.GroupsPerPage));
-				
 
-			return new GroupsServiceModel
-			{
-				CurrentPage = query.CurrentPage,
-				SearchTerm = query.SearchTerm,
-				Sorting = query.Sorting,
-				Groups = groups,
-				TotalGroups = totalGroups
-			};
+			var groupsViewModel = this._mapper.Map<GroupsServiceModel>(query);
+			groupsViewModel.Groups = groups;
+			groupsViewModel.TotalGroups = totalGroups;
+
+			return groupsViewModel;
 		}
 
 		public async Task<bool> Create(CreateGroupServiceModel group, ClaimsPrincipal userPrincipal)
@@ -71,19 +73,13 @@ namespace Quizo.Services.Groups
 			{
 				var user = await _userManager.GetUserAsync(userPrincipal);
 
-				var newGroup = new Group
-				{
-					Name = group.Name,
-					ImageUrl = group.ImageUrl,
-					Description = group.Description,
-					OwnerId = user.Id,
-					Members = new List<User>()
-				};
+				var newGroupMap = this._mapper.Map<Group>(group);
+				newGroupMap.OwnerId = user.Id;
+				
+				newGroupMap.Members.Add(user);
+				user.Groups.Add(newGroupMap);
 
-				newGroup.Members.Add(user);
-				user.Groups.Add(newGroup);
-
-				_data.Groups.Add(newGroup);	
+				_data.Groups.Add(newGroupMap);	
 				await _data.SaveChangesAsync();
 			}
 			catch (Exception)

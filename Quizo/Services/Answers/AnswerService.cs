@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Security.Claims;
 using Quizo.Data;
 using Quizo.Services.Answers.Interfaces;
 

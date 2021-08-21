@@ -19,7 +19,7 @@ namespace Quizo.Data.Models
 		public string Description { get; set; }
 
 		[Required]
-		public string OwnerId { get; init; }
+		public string OwnerId { get; set; }
 
 		[Display(Name = "Image Url")]
 		[Required]

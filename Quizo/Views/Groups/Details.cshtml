@@ -12,7 +12,7 @@
 
 <div class="section">
 	<div class="container">
-		@if (Model.HasQuestions)
+		@if (Model.HasQuestions && !Model.IsOwner)
 		{
 			<div class="alert alert-info">
 				<div class="container">

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Quizo.Data;
@@ -16,10 +17,12 @@ namespace Quizo.Services.Question
 	public class QuestionService : IQuestionService
 	{
 		private readonly QuizoDbContext _context;
+		private readonly IMapper _mapper;
 
-		public QuestionService(QuizoDbContext context)
+		public QuestionService(QuizoDbContext context, IMapper mapper)
 		{
 			_context = context;
+			_mapper = mapper;
 		}
 		
 		public async Task<PoolViewModel> All(
@@ -61,20 +64,14 @@ namespace Quizo.Services.Question
 					return false;
 				}
 
-				var question = new Data.Models.Question()
-				{
-					Value = query.Value,
-					Answers = new List<Answer>(),
-					AuthorId = userId,
-					GroupId = group.Id
-				};
-
+				var question = this._mapper.Map<Data.Models.Question> (query);
+				question.AuthorId = userId;
+				
 				var answerFirst = CreateAnswer(question, query.AnswerFirst);
 				var answerSecond = CreateAnswer(question, query.AnswerSecond);
 				var answerThird = CreateAnswer(question, query.AnswerThird);
 				var answerFourth = CreateAnswer(question, query.AnswerFourth);
 				
-
 				(question.Answers as List<Answer>)?.Add(answerFirst);
 				(question.Answers as List<Answer>)?.Add(answerSecond);
 				(question.Answers as List<Answer>)?.Add(answerThird);
@@ -82,20 +79,17 @@ namespace Quizo.Services.Question
 				
 				_context.Questions.Add(question);
 
-				var correctAnswer = new CorrectAnswers
-				{
-					AnswerId = answerFirst.Id,
-					Answer = answerFirst,
-					QuestionId = question.Id,
-					Question = question
-				};
-
+				var correctAnswer = this._mapper.Map<CorrectAnswers>(answerFirst);
+				correctAnswer.AnswerId = answerFirst.Id;
+				correctAnswer.Answer = answerFirst;
+				
 				_context.CorrectAnswers.Add(correctAnswer);
 
 				await _context.SaveChangesAsync();
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Console.WriteLine(e);
 				return false;
 			}
 			return true;

@@ -8,8 +8,8 @@ namespace Quizo.Data.Models
 		public string Id { get; init; } = Guid.NewGuid().ToString();
 
 		[Required]
-		public string AnswerId { get; init; }
-		public Answer Answer { get; init; }
+		public string AnswerId { get; set; }
+		public Answer Answer { get; set; }
 		
 		[Required]
 		public string QuestionId { get; init; }

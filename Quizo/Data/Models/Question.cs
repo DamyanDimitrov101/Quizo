@@ -14,7 +14,7 @@ namespace Quizo.Data.Models
 		public string Value { get; set; }
 
 		[Required]
-		public string  AuthorId { get; init; }
+		public string  AuthorId { get; set; }
 		public string  GroupId { get; init; }
 
 		public IEnumerable<Answer> Answers { get; set; } = new List<Answer>();
