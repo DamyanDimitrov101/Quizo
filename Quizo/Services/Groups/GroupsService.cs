@@ -222,12 +222,12 @@ namespace Quizo.Services.Groups
 			return false;
 		}
 
-		public Task<List<GroupListingServiceModel>> FindAllByIdAsync(string userId)
+		public async Task<List<GroupListingServiceModel>> FindAllByIdAsync(string userId)
 		{
 			if (userId == "") 
-				return MapToModel(this._data.Groups.AsQueryable());
+				return await MapToModel(this._data.Groups.AsQueryable());
 			
-			return MapToModel(this._data.Groups
+			return await MapToModel(this._data.Groups
 				.Where(g => g.OwnerId == userId 
 				            || g.Members.Any(u=> u.Id == userId)) 
 				.AsQueryable());

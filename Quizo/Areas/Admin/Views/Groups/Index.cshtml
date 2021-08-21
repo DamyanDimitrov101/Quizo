@@ -1,0 +1,57 @@
+﻿@using Quizo.Data.Models.Identity
+@using Microsoft.AspNetCore.Identity
+@using Quizo.Services.Groups.Models;
+
+@model List<GroupListingServiceModel>
+@inject SignInManager<User> signInManager
+
+
+@{
+	ViewData["Title"] = "My Groups";
+}
+
+@if (!signInManager.IsSignedIn(User))
+{
+	<script>
+		window.location.href = "/Identity/Account/Login";
+	</script>
+}
+
+<div class="section">
+	<div class="container main-raised m-auto">
+		<div class="text-dark p-2"><h2 class="title-container text-center">Here you can check all of the groups...</h2></div>
+		<div id="cards_landscape_wrap-2">
+			<div class="container">
+				<div class="row">
+					@foreach (var group in Model)
+					{
+						<div class="col-sm-6 col-md-3 col-lg-3">
+							<a asp-controller="Groups" asp-action="Details" asp-route-id="@group.Id">
+								<div class="card-flyer">
+									<div class="text-box">
+										<div class="image-box">
+											<img src="@group.ImageUrl" alt="@group.Name @group.OwnerName" />
+										</div>
+										<div class="text-container overflow-hidden card-text">
+											<h6>@group.OwnerName</h6>
+											<h3>@group.Name</h3>
+											<p class="img-container">@group.Description</p>
+											@if (User.IsInRole("Admin"))
+											{
+												<div class="mt-4">
+													<a class="btn-warning btn" asp-controller="Groups" asp-action="Edit" asp-route-id="@group.Id">Edit Group</a>
+													<br><br>
+													<a class="btn btn-danger" asp-controller="Groups" asp-action="Delete" asp-route-id="@group.Id">Delete Group</a>
+												</div>
+											}
+										</div>
+									</div>
+								</div>
+							</a>
+						</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -44,6 +44,9 @@ namespace Quizo
 				})
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<QuizoDbContext>();
+
+			services.AddAutoMapper(typeof(Startup));
+
 			services
 				.AddControllersWithViews(options 
 				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
@@ -83,11 +86,10 @@ namespace Quizo
 				.UseAuthorization()
 				.UseEndpoints(endpoints =>
 				{
+					endpoints.MapDefaultAreaRoute();
 					endpoints.MapDefaultControllerRoute();
 					endpoints.MapRazorPages();
 				});
-
-			
 		}
 	}
 }

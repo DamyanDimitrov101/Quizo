@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using Quizo
+@using Quizo.Data.Models.Identity
+@inject SignInManager<User> signInManager
+@inject UserManager<User> userManager
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,28 +20,21 @@
 	<link href="/assets/css/material-kit.css?v=2.0.7" rel="stylesheet" />
 	<link rel="stylesheet" href="/assets/css/MySheet.css" />
 
-	
+
 </head>
 
-<body class="index-page sidebar-collapse">
-	<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
+<body class="index-page">
+	<nav class="navbar bg-success fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
 		<div class="container">
-			<div class="navbar-translate">
+			<div class="navbar-translate mr-xl-5">
 				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
 					<b>Quizo</b>
 				</a>
-				@if (User.IsInRole("Admin"))
-				{
-					<a class="nav-open bg-light rounded-circle p-1" asp-area="Admin" asp-controller="Groups" asp-action="Index">
-						<b>Admin</b>
-					</a>
-				}
-				else
-				{
-					<a class="nav-open bg-light rounded-circle p-1" asp-controller="Groups" asp-action="MyGroups">
-						<b>My Groups</b>
-					</a>	
-				}
+
+				<a class="nav-open bg-light text-success rounded-circle p-1" asp-controller="Groups" asp-action="Index">
+					<b>Admin</b>
+				</a>
+
 				<button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="sr-only">Toggle navigation</span>
 					<span class="navbar-toggler-icon"></span>
@@ -44,33 +42,39 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 			</div>
-			<div class="collapse navbar-collapse">
+			<div class="collapse navbar-collapse ml-xl-5">
 				<ul class="navbar-nav ml-auto">
-					<li class="nav-item">
-						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://twitter.com/" target="_blank" data-original-title="Follow us on Twitter" rel="nofollow">
-							<i class="fa fa-twitter"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.facebook.com/" target="_blank" data-original-title="Like us on Facebook" rel="nofollow">
-							<i class="fa fa-facebook-square"></i>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" rel="tooltip" title="" data-placement="bottom" href="https://www.instagram.com/" target="_blank" data-original-title="Follow us on Instagram" rel="nofollow">
-							<i class="fa fa-instagram"></i>
-						</a>
-					</li>
+					@if (signInManager.IsSignedIn(User) && User.IsInRole(WebConstants.AdministratorRoleName))
+					{
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link btn btn-default" 
+							   asp-area="" 
+							   asp-controller="Home" 
+							   asp-action="Error"  
+							   >Logout</a>
+						</li>
+					}
+					else
+					{
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+						</li>
+					}
 				</ul>
-				<partial name="_LoginPartial" />
 			</div>
 		</div>
 	</nav>
 
 
-<main role="main space-70 main-raised" class="pb-3 main">
-	@RenderBody()
-</main>
+	<main role="main space-70 main-raised" class="pb-3 main">
+		@RenderBody()
+	</main>
 
 
 	<!--  End Modal -->
@@ -89,7 +93,7 @@
 				&copy;
 				<script>
 					document.write(new Date().getFullYear())
-				</script> - Quizo - 
+				</script> - Quizo -
 				<a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
 			</div>
 		</div>
@@ -106,25 +110,25 @@
 	<!--  Google Maps Plugin    -->
 	<!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
 	<script src="/assets/js/material-kit.js?v=2.0.7" type="text/javascript"></script>
-<script>
-	$(document).ready(function () {
-		//init DateTimePickers
-		materialKit.initFormExtendedDatetimepickers();
+	<script>
+		$(document).ready(function () {
+			//init DateTimePickers
+			materialKit.initFormExtendedDatetimepickers();
 
-		// Sliders Init
-		materialKit.initSliders();
-	});
+			// Sliders Init
+			materialKit.initSliders();
+		});
 
 
-	function scrollToDownload() {
-		if ($('.section-download').length != 0) {
-			$("html, body").animate({
-				scrollTop: $('.section-download').offset().top
-			}, 1000);
+		function scrollToDownload() {
+			if ($('.section-download').length != 0) {
+				$("html, body").animate({
+					scrollTop: $('.section-download').offset().top
+				}, 1000);
+			}
 		}
-	}
-</script>
-@await RenderSectionAsync("Scripts", required: false)
+	</script>
+	@await RenderSectionAsync("Scripts", required: false)
 
 </body>
 

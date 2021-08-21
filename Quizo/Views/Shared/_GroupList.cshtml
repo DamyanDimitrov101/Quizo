@@ -17,14 +17,6 @@
 									<h6>@group.OwnerName</h6>
 									<h3>@group.Name</h3>
 									<p class="img-container">@group.Description</p>
-									@if (User.IsInRole("Admin"))
-									{
-										<div class="mt-4">
-											<a class="btn-warning btn" asp-controller="Groups" asp-action="Edit" asp-route-id="@group.Id">Edit Group</a>
-										<br><br>
-										<a class="btn btn-danger" asp-controller="Groups" asp-action="Delete" asp-route-id="@group.Id">Delete Group</a>
-										</div>
-									}
 								</div>
 							</div>
 						</div>
