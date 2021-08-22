@@ -10,8 +10,8 @@ using Quizo.Data;
 namespace Quizo.Data.MigrationsEF
 {
     [DbContext(typeof(QuizoDbContext))]
-    [Migration("20210821041333_GroupOwnerIdInitToSet")]
-    partial class GroupOwnerIdInitToSet
+    [Migration("20210821055734_CurrentAnswersToPoolMigration")]
+    partial class CurrentAnswersToPoolMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -209,6 +209,37 @@ namespace Quizo.Data.MigrationsEF
                     b.HasIndex("QuestionId");
 
                     b.ToTable("CorrectAnswers");
+                });
+
+            modelBuilder.Entity("Quizo.Data.Models.CurrentAnswer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AnswerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsCorect")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CurrentAnswer");
                 });
 
             modelBuilder.Entity("Quizo.Data.Models.Group", b =>
@@ -438,6 +469,33 @@ namespace Quizo.Data.MigrationsEF
                     b.Navigation("Answer");
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("Quizo.Data.Models.CurrentAnswer", b =>
+                {
+                    b.HasOne("Quizo.Data.Models.Answer", "Answer")
+                        .WithMany()
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quizo.Data.Models.Question", "Question")
+                        .WithMany()
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Quizo.Data.Models.Identity.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Quizo.Data.Models.Identity.UserGroups", b =>

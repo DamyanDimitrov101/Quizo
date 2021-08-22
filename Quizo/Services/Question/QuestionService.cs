@@ -26,29 +26,44 @@ namespace Quizo.Services.Question
 		}
 		
 		public async Task<PoolViewModel> All(
-			[FromQuery]PoolViewModel query, 
+			PoolViewModel query, 
 			ClaimsPrincipal userPrincipal)
 		{
 			Group @group = await this._context.Groups
 				.FirstOrDefaultAsync(g => g.Id == query.GroupId);
-			var userId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+			var userId =userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
 
 			if (@group is null) return null;
 
-			var pool = new PoolViewModel()
-			{
-				Group = @group,
-				GroupId = @group.Id,
-				CurrentQuestion = query.CurrentQuestion,
-				IsOwner = @group.OwnerId == userId,
-				Questions = _context
-					.Questions
-					.Include(q => q.Answers)
-					.Where(q => q.GroupId == query.GroupId)
-					.ToList()
-			};
+			
+			query.Group = @group;
+			query.UserId = userId;
+			query.IsOwner = @group.OwnerId == userId;
+			query.Questions =await _context
+				.Questions
+				.Include(q => q.Answers)
+				.Where(q => q.GroupId == query.GroupId)
+				.ToListAsync();
 
-			return pool;
+			var question = query.Questions.Skip(query.CurrentQuestion).Take(1).FirstOrDefault();
+			if (question is null)
+			{
+				return null;
+			}
+
+			query.CurrentQuestionModel = query.Questions.ToList()[query.CurrentQuestion];
+			
+			var next = query.CurrentQuestion +1;
+			var count = query.Questions.Count() - 1;
+			if (next >= count) next = count;
+
+			var prev = query.CurrentQuestion - 1;
+			if (prev < 0) prev = 0;
+
+			query.NextQuestion = next;
+			query.PrevQuestion = prev;
+
+				return query;
 		}
 
 		public async Task<bool> Add(AddQuestionFormModel query, ClaimsPrincipal userPrincipal)

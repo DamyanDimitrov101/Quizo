@@ -47,39 +47,48 @@
 
 								@{
 									var count = 0;
-									var question = Model.Questions.Skip(Model.CurrentQuestion).Take(1).FirstOrDefault();
-									if (question is null)
-									{
-										return;
-									}
-									var nextQuestion = Model.CurrentQuestion + 1;
+									
+									
+									var isCurrentQuestionAnswered = Model.CurrentAnswers.Any(a=> a.QuestionId == Model.CurrentQuestionModel.Id);
 								}
 
-								<div class="carousel-item @(count++==0 ? "active" : String.Empty) ">
+								<div class="carousel-item active">
 									<img class="d-block w-100" src="@(Model.Group.ImageUrl)" alt="First slide">
 									<div class="carousel-caption d-none d-lg-inline-block col-auto">
 										<h4 class="text-capitalize font-weight-bold text-white bg-primary p-lg-3" readonly="readonly">
 											<i class="material-icons">quiz</i>
-											@question.Value
+											@Model.CurrentQuestionModel.Value
 										</h4>
-											
-											@foreach (var answer in question.Answers)
-											{
-												<form method="post" asp-controller="Answers" asp-action="Respond">
 
-												<input asp-for="CurrentQuestionId" type="hidden" class="form-control" value="@question.Id"/>
-												<input asp-for="CurrentAnswerId" type="hidden" class="form-control" value="@answer.Id"/>
-												<input asp-for="GroupId" type="hidden" class="form-control" value="@Model.GroupId"/>
-												<input asp-for="CurrentQuestion" type="hidden" class="form-control" value="@(nextQuestion)"/>
-												<input 
-													type="submit" 
-													class="btn btn-block text-white"
-													value="@answer.Value"
-												/>
+										@foreach (var answer in Model.CurrentQuestionModel.Answers)
+										{
+									<form method="post"
+										  asp-controller="Answers"
+										  asp-action="Respond">
+										
+										<input asp-for="CurrentAnswerId"
+											   type="hidden"
+											   class="form-control"
+											   value="@answer.Id" />
 
-												</form>
+										<input asp-for="GroupId"
+											   type="hidden"
+											   class="form-control"
+											   value="@Model.GroupId" />
 
-											}
+										<input asp-for="CurrentQuestion"
+											   type="hidden"
+											   class="form-control"
+											   value="@(Model.CurrentQuestion)" />
+
+										<input type="submit"
+											   disabled="@(isCurrentQuestionAnswered ? "disabled": false)"
+											   class="btn btn-block text-white"
+											   value="@answer.Value" />
+
+									</form>
+
+										}
 									</div>
 								</div>
 
@@ -89,29 +98,38 @@
 								var previousQuestion = Model.CurrentQuestion - 1;
 								if (previousQuestion < 0) previousQuestion = 0;
 
-								var maxQuestion = WebConstants.MaxQuestionAtPool;
-								var hasNext = Model.CurrentQuestion == maxQuestion;
+								var maxQuestion = Model.Questions.Count() - 1;
+
+								var hasNext = Model.CurrentQuestion < maxQuestion;
+								var hasPrev = Model.CurrentQuestion > 0;
 							}
-							<a class="carousel-control-prev"
-							   asp-controller="Questions"
-							   asp-action="Pool"
-							   asp-route-CurrentQuestion="@(previousQuestion)"
-							   asp-route-GroupId="@Model.GroupId"
-							   role="button"
-							   data-slide="prev">
-								<i class="material-icons">keyboard_arrow_left</i>
-								<span class="sr-only">Previous</span>
-							</a>
-							<a class="carousel-control-next"
-							   asp-controller="Questions"
-							   asp-action="Pool"
-							   asp-route-CurrentQuestion="@(nextQuestion)"
-							   asp-route-GroupId="@Model.GroupId"
-							   role="button"
-							   data-slide="next">
-								<i class="material-icons">keyboard_arrow_right</i>
-								<span class="sr-only">Next</span>
-							</a>
+							@if (hasPrev)
+							{
+								<a class="carousel-control-prev"
+								   asp-controller="Questions"
+								   asp-action="Pool"
+								   asp-route-CurrentQuestion="@(Model.PrevQuestion)"
+								   asp-route-GroupId="@Model.GroupId"
+								   role="button"
+								   data-slide="prev">
+									<i class="material-icons">keyboard_arrow_left</i>
+									<span class="sr-only">Previous</span>
+								</a>
+							}
+
+							@if (hasNext)
+							{
+								<a class="carousel-control-next"
+								   asp-controller="Questions"
+								   asp-action="Pool"
+								   asp-route-CurrentQuestion="@(Model.NextQuestion)"
+								   asp-route-GroupId="@Model.GroupId"
+								   role="button"
+								   data-slide="next">
+									<i class="material-icons">keyboard_arrow_right</i>
+									<span class="sr-only">Next</span>
+								</a>
+							}
 						</div>
 					</div>
 				}

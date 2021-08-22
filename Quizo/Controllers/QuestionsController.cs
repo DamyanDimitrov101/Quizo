@@ -1,7 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Quizo.Models.Questions;
+using Quizo.Services.Answers.Interfaces;
 using Quizo.Services.Question.Interfaces;
 using Quizo.Services.Question.Models;
 
@@ -11,22 +15,29 @@ namespace Quizo.Controllers
 	public class QuestionsController : Controller
 	{
 		private readonly IQuestionService _questionService;
+		private readonly IAnswerService _answerService;
 
-		public QuestionsController(IQuestionService questionService)
+		public QuestionsController(IQuestionService questionService, IAnswerService answerService)
 		{
 			this._questionService = questionService;
+			_answerService = answerService;
 		}
 
-		public async Task<IActionResult> Pool([FromQuery]PoolViewModel query)
+		public async Task<IActionResult> Pool(PoolViewModel query)
 		{
 			if (query is null) return NotFound();
-			//if (query.CurrentQuestion < 0) query.CurrentQuestion = 0;
 
-			var pool =await this._questionService.All(query, this.User);
-			if (pool is null) return BadRequest();
+			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			
+			query.UserId = userId;
+			query = await this._questionService.All(query, this.User);
+			
+			if (query is null) return BadRequest();
+
+			query.CurrentAnswers = await this._answerService.GetCurrentAnswers(query.CurrentQuestionModel.Id, query.UserId, query.Questions.ToList());
 
 
-			return View(pool);
+			return View(query);
 		}
 
 		public async Task<IActionResult> Add(string id)
