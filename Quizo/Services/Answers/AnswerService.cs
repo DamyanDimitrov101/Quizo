@@ -21,7 +21,7 @@ namespace Quizo.Services.Answers
 			this._mapper = mapper;
 		}
 
-		public CurrentAnswer GetCurrentAnswer (string questionId, string answerId, ClaimsPrincipal user)
+		public CurrentAnswer GetCurrentAnswer (string questionId, string answerId, string groupId, ClaimsPrincipal user)
 		{
 			var isCorrect = this.IsTheCorrectAnswer(questionId, answerId);
 			var userId = user.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -31,7 +31,8 @@ namespace Quizo.Services.Answers
 				AnswerId = answerId,
 				QuestionId = questionId,
 				UserId = userId,
-				IsCorect = isCorrect
+				IsCorect = isCorrect,
+				GroupId = groupId
 			};
 
 			this._data.CurrentAnswer.Add(currentAnswer);

@@ -4,7 +4,7 @@ using Quizo.Data.Models.Identity;
 
 namespace Quizo.Services.Question.Models
 {
-	public class PoolViewModel
+	public class PoolServiceModel
 	{
 		public Group Group { get; set; }
 		public string GroupId { get; set; }

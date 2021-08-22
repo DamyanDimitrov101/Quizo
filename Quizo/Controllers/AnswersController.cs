@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Quizo.Data.Models;
 using Quizo.Services.Answers.Interfaces;
 using Quizo.Services.Question.Interfaces;
 using Quizo.Services.Question.Models;
@@ -24,7 +22,7 @@ namespace Quizo.Controllers
 		}
 
 		[HttpPost]
-		public async Task<ActionResult<PoolViewModel>> Respond(PoolViewModel query)
+		public async Task<ActionResult<PoolServiceModel>> Respond(PoolServiceModel query)
 		{
 			var pool =await this._questionService.All(query, this.User);
 			if (pool is null) return BadRequest();
@@ -32,7 +30,7 @@ namespace Quizo.Controllers
 			pool.CurrentQuestion +=1;
 			if (pool.CurrentQuestion >= pool.Questions.Count()) pool.CurrentQuestion = pool.Questions.Count() - 1;
 
-			var currentAnswer = this._answerService.GetCurrentAnswer(query.CurrentQuestionModel.Id, query.CurrentAnswerId, this.User);
+			var currentAnswer = this._answerService.GetCurrentAnswer(query.CurrentQuestionModel.Id, query.CurrentAnswerId, query.GroupId, this.User);
 			
 
 			return RedirectToAction("Pool", "Questions", pool);   

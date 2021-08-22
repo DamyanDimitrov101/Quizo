@@ -7,7 +7,7 @@ namespace Quizo.Services.Answers.Interfaces
 {
 	public interface IAnswerService
 	{
-		CurrentAnswer GetCurrentAnswer(string questionId, string answerId, ClaimsPrincipal user);
+		CurrentAnswer GetCurrentAnswer(string questionId, string answerId, string groupId, ClaimsPrincipal user);
 		Task<IList<CurrentAnswer>> GetCurrentAnswers(string currentQuestionId, string userId, List<Data.Models.Question> questions);
 	}
 }

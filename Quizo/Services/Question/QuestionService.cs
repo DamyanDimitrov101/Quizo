@@ -25,8 +25,8 @@ namespace Quizo.Services.Question
 			_mapper = mapper;
 		}
 		
-		public async Task<PoolViewModel> All(
-			PoolViewModel query, 
+		public async Task<PoolServiceModel> All(
+			PoolServiceModel query, 
 			ClaimsPrincipal userPrincipal)
 		{
 			Group @group = await this._context.Groups

@@ -23,7 +23,7 @@ namespace Quizo.Controllers
 			_answerService = answerService;
 		}
 
-		public async Task<IActionResult> Pool(PoolViewModel query)
+		public async Task<IActionResult> Pool(PoolServiceModel query)
 		{
 			if (query is null) return NotFound();
 

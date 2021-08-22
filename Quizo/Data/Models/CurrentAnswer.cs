@@ -21,5 +21,8 @@ namespace Quizo.Data.Models
 		[Required]
 		public string UserId { get; init; }
 		public User User { get; init; }
+
+		[Required]
+		public string GroupId { get; init; }
 	}
 }
