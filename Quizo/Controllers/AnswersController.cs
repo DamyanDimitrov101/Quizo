@@ -31,7 +31,9 @@ namespace Quizo.Controllers
 			if (pool.CurrentQuestion >= pool.Questions.Count()) pool.CurrentQuestion = pool.Questions.Count() - 1;
 
 			var currentAnswer = this._answerService.GetCurrentAnswer(query.CurrentQuestionModel.Id, query.CurrentAnswerId, query.GroupId, this.User);
-			
+
+			if (currentAnswer.IsCorect)
+				TempData[WebConstants.GlobalSuccessMessageKey] = "Correct!";
 
 			return RedirectToAction("Pool", "Questions", pool);   
 		}

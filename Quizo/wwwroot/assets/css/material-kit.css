@@ -14991,6 +14991,9 @@ textarea {
   border-radius: 0;
   padding: 20px 15px;
   line-height: 20px;
+	position: absolute;
+	z-index: 100;
+	width: 100%;
 }
 
 .alert b {
@@ -15035,6 +15038,7 @@ textarea {
 .alert.alert-success {
   background-color: #55b559;
   color: #fff;
+	top: 4.8%;
 }
 
 .alert.alert-success a,
@@ -15042,9 +15046,10 @@ textarea {
   color: #fff;
 }
 
-.alert.alert-info {
-  background-color: #00cae3;
-  color: #fff;
+    .alert.alert-info {
+        background-color: #00cae3;
+	    color: #fff;
+	    top: 5%;
 }
 
 .alert.alert-info a,

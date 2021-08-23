@@ -25,17 +25,20 @@
 				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
 					<b>Quizo</b>
 				</a>
-				@if (User.IsInRole("Admin"))
+				@if (User.Identity.IsAuthenticated)
 				{
-					<a class="nav-open bg-light rounded-circle p-1" asp-area="Admin" asp-controller="Groups" asp-action="Index">
-						<b>Admin</b>
-					</a>
-				}
-				else
-				{
-					<a class="nav-open bg-light rounded-circle p-1" asp-controller="Groups" asp-action="MyGroups">
-						<b>My Groups</b>
-					</a>	
+					@if (User.IsInRole("Admin"))
+					{
+						<a class="nav-open bg-light rounded-circle p-1" asp-area="Admin" asp-controller="Groups" asp-action="Index">
+							<b>Admin</b>
+						</a>
+					}
+					else
+					{
+						<a class="nav-open bg-light rounded-circle p-1" asp-controller="Groups" asp-action="MyGroups">
+							<b>My Groups</b>
+						</a>	
+					}
 				}
 				<button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
 					<span class="sr-only">Toggle navigation</span>
@@ -68,9 +71,39 @@
 	</nav>
 
 
-<main role="main space-70 main-raised" class="pb-3 main">
-	@RenderBody()
-</main>
+	<main role="main" class="pb-3 main">
+		@if (TempData.ContainsKey(WebConstants.GlobalSuccessMessageKey))
+		{
+			<div class="alert b alert-success text-center" role="alert">
+				@TempData[WebConstants.GlobalSuccessMessageKey]
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true"><i class="material-icons">clear</i></span>
+				</button>
+			</div>
+		}
+
+		@if (TempData.ContainsKey(WebConstants.GlobalInfoMessageKey))
+		{
+			<div class="alert alert-info">
+				<div class="container">
+					<div class="alert-icon">
+						<i class="material-icons">info_outline</i>
+					</div>
+					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+						<span aria-hidden="true"><i class="material-icons">clear</i></span>
+					</button>
+					<b>
+						<span>
+							<a asp-controller="Questions"
+							   asp-action="Pool"
+							   asp-route-GroupId="@TempData[WebConstants.GlobalInfoMessageKey]">Start the quiz:</a>
+						</span>
+					</b> You've got some questions to answer, begin your test now...
+				</div>
+			</div>
+		}
+		@RenderBody()
+	</main>
 
 
 	<!--  End Modal -->

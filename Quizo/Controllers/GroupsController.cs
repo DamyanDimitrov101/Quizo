@@ -19,7 +19,6 @@ namespace Quizo.Controllers
 		}
 
 		// GET: Groups
-		[Authorize]
 		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupsServiceModel query)
 		{ 
 			var service = await this._groupsService.All(query);
@@ -43,11 +42,15 @@ namespace Quizo.Controllers
 				return NotFound();
 			}
 
+			if(groupDetails.HasQuestions && !groupDetails.IsOwner)
+			{
+				TempData[WebConstants.GlobalInfoMessageKey] = groupDetails.Id;
+			}
+
 			return View(groupDetails);
 		}
 
 		// GET: Groups/Create
-		[Authorize]
 		public IActionResult Create()
 		{
 			return View();
@@ -55,7 +58,6 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Create
 		[HttpPost]
-		[Authorize]
 		public async Task<IActionResult> Create(CreateGroupServiceModel group)
 		{
 			if (!ModelState.IsValid)
@@ -65,12 +67,14 @@ namespace Quizo.Controllers
 
 			var isCreated = await this._groupsService.Create(group, this.User);
 
-			return  isCreated ? RedirectToAction(nameof(All), "Groups") 
+			if (isCreated)
+				TempData[WebConstants.GlobalSuccessMessageKey] = "You successfully created a new group!";
+			
+			return isCreated ? RedirectToAction(nameof(All), "Groups") 
 				: View(group);
 		}
 
 		// GET: Groups/Edit/5
-		[Authorize]
 		public async Task<IActionResult> Edit(string id)
 		{
 			if (id == null)
@@ -90,20 +94,21 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Edit/5
 		[HttpPost]
-		[Authorize]
 		public async Task<IActionResult> Edit(GroupListingServiceModel query)
 		{
 			if (ModelState.IsValid)
 			{
-				if (!await this._groupsService.EditAsync(query, this.User)) return BadRequest();
+				var isEdited = await this._groupsService.EditAsync(query, this.User);
+				if (!isEdited) return BadRequest();
 				
+				TempData[WebConstants.GlobalSuccessMessageKey] = "You successfully edited the group!";
+
 				return RedirectToAction(nameof(Details),new {query.Id});
 			}
 			return View(query);
 		}
 
 		// GET: Groups/Delete/5
-		[Authorize]
 		public async Task<IActionResult> Delete(string id)
 		{
 			if (id == null)
@@ -124,16 +129,17 @@ namespace Quizo.Controllers
 		// POST: Groups/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[AutoValidateAntiforgeryToken]
-		[Authorize]
 		public async Task<IActionResult> DeleteConfirmed(string id)
 		{
-			if (! await this._groupsService.DeleteAsync(id, this.User)) return BadRequest();
+			var isDeleted = await this._groupsService.DeleteAsync(id, this.User);
+			if (!isDeleted) return BadRequest();
+			
+			TempData[WebConstants.GlobalSuccessMessageKey] = "You successfully deleted the group!";
 
 			return RedirectToAction(nameof(All));
 		}
 		
 		// GET: Groups/Join/Id
-		[Authorize]
 		public async Task<ActionResult> Join(string id)
 		{
 			if (id == null)
@@ -151,7 +157,6 @@ namespace Quizo.Controllers
 
 		// POST: Groups/Create/Id
 		[HttpPost]
-		[Authorize]
 		public async Task<IActionResult> Join(string id, bool isAgreed)
 		{
 			//|| !query.IsAgreed
@@ -165,13 +170,15 @@ namespace Quizo.Controllers
 				return Unauthorized();
 			}
 
-			var isJoined = this._groupsService.Join(id, this.User);
+			var isJoined =await this._groupsService.Join(id, this.User);
 
-			return await isJoined ? RedirectToAction(nameof(Details), new {Id = id})
+			if (isJoined)
+				TempData[WebConstants.GlobalSuccessMessageKey] = "You successfully joined the group!";
+
+			return  isJoined ? RedirectToAction(nameof(Details), new {Id = id})
 				: View(new JoinGroupServiceModel { Id = id, IsAgreed = false, IsJoined = true});
 		}
-
-		[Authorize]
+		
 		public async Task<IActionResult> MyGroups()
 		{
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

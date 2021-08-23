@@ -12,26 +12,7 @@
 
 <div class="section">
 	<div class="container">
-		@if (Model.HasQuestions && !Model.IsOwner)
-		{
-			<div class="alert alert-info">
-				<div class="container">
-					<div class="alert-icon">
-						<i class="material-icons">info_outline</i>
-					</div>
-					<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-						<span aria-hidden="true"><i class="material-icons">clear</i></span>
-					</button>
-					<b>
-						<span>
-							<a asp-controller="Questions"
-							   asp-action="Pool"
-							   asp-route-GroupId="@Model.Id">Start the quiz:</a>
-						</span>
-					</b> You've got some questions to answer, begin your test now...
-				</div>
-			</div>
-		}
+	
 
 		<h1>@Model.Name Details</h1>
 

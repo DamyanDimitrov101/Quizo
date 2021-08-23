@@ -50,11 +50,10 @@
 							<a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link btn btn-default" 
-							   asp-area="" 
-							   asp-controller="Home" 
-							   asp-action="Error"  
-							   >Logout</a>
+							<a class="nav-link btn btn-default"
+							   asp-area="Identity"
+							   asp-controller="Account"
+							   asp-action="Logout">Logout</a>
 						</li>
 					}
 					else

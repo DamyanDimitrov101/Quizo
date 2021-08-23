@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -40,7 +39,7 @@ namespace Quizo.Controllers
 			return View(query);
 		}
 
-		public async Task<IActionResult> Add(string id)
+		public IActionResult Add(string id)
 		{
 			if (id is null) return NotFound();
 
@@ -60,6 +59,9 @@ namespace Quizo.Controllers
 			if (question.GroupId is null) return NotFound();
 			
 			var isCreated = await this._questionService.Add(question, this.User);
+
+			if (isCreated)
+				TempData[WebConstants.GlobalSuccessMessageKey] = "You successfully added a new question to the group!";
 
 			return isCreated ? RedirectToAction("Details", "Groups", new {Id = question.GroupId})
 				: View(question);	

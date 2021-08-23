@@ -1,5 +1,8 @@
+using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +47,17 @@ namespace Quizo
 				})
 				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<QuizoDbContext>();
+
+			services.ConfigureApplicationCookie(options =>
+			{
+				options.AccessDeniedPath = new PathString("/Account/AccessDenied");
+				options.Cookie.Name = "Cookie";
+				options.Cookie.HttpOnly = true;
+				options.ExpireTimeSpan = TimeSpan.FromMinutes(720);
+				options.LoginPath = new PathString("/Account/Login");
+				options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+				options.SlidingExpiration = true;
+			});
 
 			services.AddAutoMapper(typeof(Startup));
 

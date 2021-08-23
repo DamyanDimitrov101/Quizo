@@ -74,10 +74,13 @@ namespace Quizo.Services.Question
 
 				var group = _context.Groups.FirstOrDefault(g=>g.Id==query.GroupId);
 
-				if (group==null || userId != group.OwnerId)
+				if (group == null || userId != group.OwnerId)
 				{
 					return false;
 				}
+
+				var questions = await this._context.Questions.Where(q => q.GroupId == group.Id).ToListAsync();
+				if (questions.Count >= 10) return false;
 
 				var question = this._mapper.Map<Data.Models.Question> (query);
 				question.AuthorId = userId;

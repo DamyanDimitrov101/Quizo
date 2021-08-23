@@ -16,6 +16,7 @@ namespace Quizo.Controllers
 
 		public IActionResult Index()
 		{
+			_logger.LogInformation("Welcome");
 			return View();
 		}
 
