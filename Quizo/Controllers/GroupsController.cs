@@ -26,7 +26,7 @@ namespace Quizo.Controllers
 			
 			return View(service);
 		}
-
+			
 		// GET: Groups/Details/5
 		[Authorize]
 		public async Task<IActionResult> Details(string id)

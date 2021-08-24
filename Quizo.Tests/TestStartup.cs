@@ -9,5 +9,6 @@ namespace MusicStore.Test
 			: base(configuration)
 		{
 		}
+		
 	}
 }

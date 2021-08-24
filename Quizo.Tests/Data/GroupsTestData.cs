@@ -35,7 +35,7 @@ namespace Quizo.Tests.Data
 				Description = "Test",
 				Members = new List<User>
 				{
-					new User(),
+					new User(){Id = "UserTestId"},
 					new User(),
 					new User(),
 					new User()
