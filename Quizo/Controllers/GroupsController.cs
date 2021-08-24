@@ -19,6 +19,7 @@ namespace Quizo.Controllers
 		}
 
 		// GET: Groups
+		[Authorize]
 		public async Task<ActionResult<GroupsServiceModel>> All([FromQuery] GroupsServiceModel query)
 		{ 
 			var service = await this._groupsService.All(query);

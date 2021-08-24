@@ -27,11 +27,12 @@ namespace Quizo.Controllers
 			if (query is null) return NotFound();
 
 			var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var groupId = query.GroupId;
 			
 			query.UserId = userId;
 			query = await this._questionService.All(query, this.User);
 			
-			if (query is null) return BadRequest();
+			if (query is null) return RedirectToAction("NoQuestions", "Questions" , new { groupId });
 
 			query.CurrentAnswers = await this._answerService.GetCurrentAnswers(query.CurrentQuestionModel.Id, query.UserId, query.Questions.ToList());
 
@@ -67,6 +68,7 @@ namespace Quizo.Controllers
 				: View(question);	
 		}
 
-		
+		public IActionResult NoQuestions(string groupId) 
+			=> View(new NoQuestionsViewModel { GroupId  = groupId });
 	}
 }

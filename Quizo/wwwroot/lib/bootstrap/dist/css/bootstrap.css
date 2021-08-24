@@ -4142,6 +4142,7 @@ input[type="button"].btn-block {
 
 .tab-content > .active {
   display: block;
+	height: 300%;
 }
 
 .navbar {

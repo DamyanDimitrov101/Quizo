@@ -1,0 +1,22 @@
+﻿@model NoQuestionsViewModel
+
+@{
+	ViewData["Title"] = "No Questions";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+	var nav = new NavigationViewModel { Title = "Sorry" };
+}
+
+<partial name="_NavigationBg" model="@nav" />
+
+<div class="container text-center">
+
+	<h1>No questions for now...</h1>
+	<p>Please come back again when the group admin invites you...</p>
+
+	<div>
+		<a class="btn btn-default" asp-controller="Groups" asp-action="Details" asp-route-id="@Model.GroupId">Back to the Group</a>
+	</div>
+</div>

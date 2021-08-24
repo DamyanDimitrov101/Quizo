@@ -30,7 +30,8 @@ namespace Quizo.Areas.Identity.Pages.Account
             _logger.LogInformation("User logged out.");
             if (returnUrl != null)
             {
-                return LocalRedirect(returnUrl);
+	            TempData[WebConstants.GlobalIdentityMessageKey] = "Goodbye!";
+	            return LocalRedirect(returnUrl);
             }
             else
             {

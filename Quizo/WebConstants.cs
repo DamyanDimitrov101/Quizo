@@ -6,6 +6,7 @@
 		public const  int MaxQuestionAtPool = 10;
 		public const string GlobalSuccessMessageKey = "GlobalSuccessMessageKey";
 		public const string GlobalInfoMessageKey = "GlobalInfoMessageKey";
+		public const string GlobalIdentityMessageKey = "GlobalIdentityMessageKey";
 
 	}
 }

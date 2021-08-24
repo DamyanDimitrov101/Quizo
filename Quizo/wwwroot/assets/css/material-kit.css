@@ -15038,7 +15038,7 @@ textarea {
 .alert.alert-success {
   background-color: #55b559;
   color: #fff;
-	top: 4.8%;
+	top: 80px;
 }
 
 .alert.alert-success a,
@@ -15049,7 +15049,7 @@ textarea {
     .alert.alert-info {
         background-color: #00cae3;
 	    color: #fff;
-	    top: 5%;
+	    top: 80px;
 }
 
 .alert.alert-info a,

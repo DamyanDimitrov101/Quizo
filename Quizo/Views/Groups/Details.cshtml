@@ -12,7 +12,7 @@
 
 <div class="section">
 	<div class="container">
-	
+
 
 		<h1>@Model.Name Details</h1>
 
@@ -68,7 +68,7 @@
 					}
 				</div>
 
-				<div class="tab-pane" id="schedule-1">
+				<div class="tab-pane h-100" id="schedule-1">
 					<div class="container">
 						<div class="row">
 							<div class="w-100">
@@ -179,7 +179,25 @@
 				$.get('/api/standings/@Model.Id',
 					data => {
 						for (var i = 1; i <= 10; i++) {
-							$((`#user${i}`)).html(`<div class="row w-100"><div class="alert alert-info w-100 d-flex p-1 m-0"><h5>${i}.</h5>` + '<h4 class="w-50">' + (data[i-1] == undefined ? 'No user' : data[i-1]) + '</h4></div></div>');
+							var bgStyles = "alert-info";
+							var textStyles = "text-dark";
+
+							switch (i) {
+							case 1:
+								bgStyles = "bg-warning";
+									textStyles = "text-white font-weight-bold";
+								break;
+							case 2:
+								bgStyles = "bg-secondary";
+									textStyles = "text-white font-weight-bolder";
+								break;
+							case 3:
+								bgStyles = "bg-danger";
+								textStyles  = "text-white";
+								break;
+							}
+
+							$((`#user${i}`)).html(`<div class="row w-100"><div class="${bgStyles} w-100 d-flex p-1 m-0"><h5 class="${textStyles}">${i}.</h5>` + `<h4 class="w-50 ${textStyles}">` + (data[i - 1] == undefined ? 'No user' : data[i - 1]) + '</h4></div></div>');
 						}
 					});
 			});

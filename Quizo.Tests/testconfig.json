@@ -1,0 +1,16 @@
+{
+	"ConnectionStrings": {
+		"DefaultConnection": "Server=DESKTOP-JA27HSD;Database=TestDb;Trusted_Connection=True;MultipleActiveResultSets=true"
+	},
+	"AppSettings": {
+		"SiteTitle": "Quizo",
+		"CacheDbResults": true
+	},
+	"DefaultAdminUsername": "Administrator@test.com",
+	"DefaultAdminPassword": "admin12",
+	"Data": {
+		"DefaultConnection": {
+			"ConnectionString": "Test Connection"
+		}
+	}
+}

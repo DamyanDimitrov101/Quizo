@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Quizo.Data;
 using Quizo.Data.Models.Identity;
@@ -23,9 +21,11 @@ namespace Quizo.Areas.Identity.Pages.Account
         private readonly ILogger<LoginModel> _logger;
         private readonly QuizoDbContext data;
 
-        public LoginModel(SignInManager<User> signInManager, 
+        public LoginModel(
+	        SignInManager<User> signInManager, 
             ILogger<LoginModel> logger,
-            UserManager<User> userManager, QuizoDbContext data)
+            UserManager<User> userManager, 
+	        QuizoDbContext data)
         {
             _userManager = userManager;
             this.data = data;

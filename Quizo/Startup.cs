@@ -34,6 +34,7 @@ namespace Quizo
 				.AddDbContext<QuizoDbContext>(options =>
 					options.UseSqlServer(
 					Configuration.GetConnectionString("DefaultConnection")));
+
 			services
 				.AddDatabaseDeveloperPageExceptionFilter();
 
