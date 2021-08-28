@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,6 +52,24 @@ namespace Quizo
 
 			services.ConfigureApplicationCookie(options =>
 			{
+				options.Events = new Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationEvents
+				{
+					OnRedirectToLogin = ctx =>
+					{
+						var requestPath = ctx.Request.Path;
+						if (requestPath.Value == "/Home/About")
+						{
+							ctx.Response.Redirect("/Home/UserLogin");
+						}
+						else if (requestPath.Value == "/Home/Contact")
+						{
+							ctx.Response.Redirect("/Home/AdminLogin");
+						}
+
+						return Task.CompletedTask;
+					}
+				};
+
 				options.AccessDeniedPath = new PathString("/Account/AccessDenied");
 				options.Cookie.Name = "Cookie";
 				options.Cookie.HttpOnly = true;

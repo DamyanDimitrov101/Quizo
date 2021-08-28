@@ -78,6 +78,7 @@ namespace Quizo.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
+            this.ViewData["ReturnUrl"] = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         
             if (ModelState.IsValid)

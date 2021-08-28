@@ -1,8 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Quizo
 @using Quizo.Data.Models.Identity
-@inject SignInManager<User> signInManager
-@inject UserManager<User> userManager
+@inject SignInManager<User> _signInManager
+@inject UserManager<User> _userManager
 <!DOCTYPE html>
 <html lang="en">
 
@@ -20,18 +20,18 @@
 	<link href="/assets/css/material-kit.css?v=2.0.7" rel="stylesheet" />
 	<link rel="stylesheet" href="/assets/css/MySheet.css" />
 
-
 </head>
 
 <body class="index-page">
 	<nav class="navbar bg-success fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
 		<div class="container">
 			<div class="navbar-translate mr-xl-5">
-				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
+				
+				<a class="navbar-brand" asp-controller="Home" asp-action="Index" asp-area="">
 					<b>Quizo</b>
 				</a>
 
-				<a class="nav-open bg-light text-success rounded-circle p-1" asp-controller="Groups" asp-action="Index">
+				<a class="nav-open bg-light text-success rounded-circle p-1" asp-controller="Groups" asp-action="Index" asp-area="Admin">
 					<b>Admin</b>
 				</a>
 
@@ -44,17 +44,14 @@
 			</div>
 			<div class="collapse navbar-collapse ml-xl-5">
 				<ul class="navbar-nav ml-auto">
-					@if (signInManager.IsSignedIn(User) && User.IsInRole(WebConstants.AdministratorRoleName))
+					@if (_signInManager.IsSignedIn(User) && User.IsInRole(WebConstants.AdministratorRoleName))
 					{
 						<li class="nav-item">
 							<a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link btn btn-default"
-							   asp-area="Identity"
-							   asp-controller="Account"
-							   asp-action="Logout">Logout</a>
-						</li>
+						<form class="btn btn-default" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+							<button type="submit" class="nav-link btn btn-link text-white">Logout</button>
+						</form>
 					}
 					else
 					{
@@ -82,7 +79,7 @@
 			<nav class="float-left">
 				<ul>
 					<li>
-						<a asp-controller="Groups" asp-action="All">
+						<a asp-controller="Groups" asp-action="All" asp-area="">
 							Groups
 						</a>
 					</li>
@@ -120,7 +117,7 @@
 
 
 		function scrollToDownload() {
-			if ($('.section-download').length != 0) {
+			if ($('.section-download').length !== 0) {
 				$("html, body").animate({
 					scrollTop: $('.section-download').offset().top
 				}, 1000);

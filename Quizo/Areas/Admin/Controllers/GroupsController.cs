@@ -13,9 +13,10 @@ namespace Quizo.Areas.Admin.Controllers
 			this.service = service;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string returnUrl = null)
 		{
 			var groups = await service.FindAllByIdAsync("");
+			this.ViewData["ReturnUrl"] = returnUrl;
 
 			return View(groups);
 		}

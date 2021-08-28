@@ -22,7 +22,8 @@
 	<nav class="navbar navbar-transparent navbar-color-on-scroll fixed-top navbar-expand-lg" color-on-scroll="100" id="sectionsNav">
 		<div class="container">
 			<div class="navbar-translate">
-				<a class="navbar-brand" asp-controller="Home" asp-action="Index">
+				
+				<a class="navbar-brand" asp-controller="Home" asp-action="Index" asp-area="">
 					<b>Quizo</b>
 				</a>
 				@if (User.Identity.IsAuthenticated)
@@ -37,7 +38,7 @@
 					{
 						<a class="nav-open bg-light rounded-circle p-1" asp-controller="Groups" asp-action="MyGroups">
 							<b>My Groups</b>
-						</a>	
+						</a>
 					}
 				}
 				<button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false" aria-label="Toggle navigation">
