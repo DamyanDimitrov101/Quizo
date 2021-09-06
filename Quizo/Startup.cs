@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quizo.Data;
 using Quizo.Data.Models.Identity;
+using Quizo.Hubs;
 using Quizo.Infrastructure;
 using Quizo.Services.Answers;
 using Quizo.Services.Answers.Interfaces;
@@ -76,14 +77,23 @@ namespace Quizo
 				options.ExpireTimeSpan = TimeSpan.FromMinutes(720);
 				options.LoginPath = new PathString("/Account/Login");
 				options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-				options.SlidingExpiration = true;
+				options.SlidingExpiration = true;				
 			});
 
+			services.Configure<CookiePolicyOptions>(options =>
+			{
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+
+			services.AddSignalR();
+		
 			services.AddAutoMapper(typeof(Startup));
 
 			services
 				.AddControllersWithViews(options 
-				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>());
+				=> options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>())
+				.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
 			services
 				.AddAuthentication()
@@ -113,16 +123,19 @@ namespace Quizo
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection()
+
+			app
+				.UseHttpsRedirection()
 				.UseStaticFiles()
 				.UseRouting()
 				.UseAuthentication()
-				.UseAuthorization()
+				.UseAuthorization()				
 				.UseEndpoints(endpoints =>
 				{
 					endpoints.MapDefaultAreaRoute();
 					endpoints.MapDefaultControllerRoute();
 					endpoints.MapRazorPages();
+					endpoints.MapHub<ChatHub>("/chat");
 				});
 		}
 	}

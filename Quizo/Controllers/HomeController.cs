@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Quizo.Models;
 using System.Diagnostics;
@@ -19,6 +20,10 @@ namespace Quizo.Controllers
 			_logger.LogInformation("Welcome");
 			return View();
 		}
+
+		[Authorize]
+		public IActionResult Chat() 
+			=> View();
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

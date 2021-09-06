@@ -1,12 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Quizo.Data;
 using Quizo.Models.Api.Groups;
-using Quizo.Models.Groups;
-using Quizo.Models.Identity;
-using Quizo.Services.Groups;
 using Quizo.Services.Groups.Interfaces;
 using Quizo.Services.Groups.Models;
 
