@@ -132,7 +132,24 @@
 							   asp-action="Pool"
 							   asp-route-GroupId="@Model.Id">Start!</a>
 
-							<span>Solve the group quiz.</span>
+							<span class="font-weight-bold p-4">Solve the group quiz.</span>
+							<br />
+							<div class="section">
+								<div class="container">
+									<div id="messageList"></div>
+									<ul id="discussion"></ul>
+
+									<hr style="height: 5px;" class="bg-secondary" />
+
+									<div class="container w-100" style="text-align: end">
+										<input type="hidden" id="nameGroup" name="nameGroup" value="@Model.Name" />
+										<input type="hidden" id="groupId" name="groupId" value="@Model.Id" />
+
+										<input type="text" id="message" class="w-100 p-0 border-secondary border-top-0 border-left-0 border-right-0" placeholder="Your message..." />
+										<input type="button" id="sendmessage" class="mb-3 mt-3 btn btn-primary" value="Send" />
+									</div>
+								</div>
+							</div>
 						}
 						else
 						{
@@ -202,5 +219,7 @@
 					});
 			});
 	</script>
+	<script type="text/javascript" src="/lib/aspnet/signalr/dist/browser/signalr.min.js"></script>
+	<script type="text/javascript" src="~/js/chat.js"></script>
 }
 
