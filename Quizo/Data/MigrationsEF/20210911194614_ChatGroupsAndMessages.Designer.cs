@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Quizo.Data;
 
-namespace Quizo.Data.MigrationsEf
+namespace Quizo.Data.MigrationsEF
 {
     [DbContext(typeof(QuizoDbContext))]
-    partial class QuizoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210911194614_ChatGroupsAndMessages")]
+    partial class ChatGroupsAndMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,7 +210,7 @@ namespace Quizo.Data.MigrationsEf
                     b.Property<string>("GroupChatId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("OwnerName")
+                    b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")

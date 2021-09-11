@@ -14,6 +14,8 @@ using Quizo.Models.Identity;
 using Quizo.Services.Groups.Interfaces;
 using Quizo.Services.Groups.Models;
 using AutoMapper;
+using static Quizo.WebConstants;
+using Quizo.Data.Models.Chat;
 
 namespace Quizo.Services.Groups
 {
@@ -104,7 +106,12 @@ namespace Quizo.Services.Groups
 					HasQuestions = g.Questions.Any(),
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
-					LastMessages = this._data.GroupChats.FirstOrDefault(gc=>gc.GroupId==g.Id).Messages,
+					LastMessages = this._data.GroupChats
+						.FirstOrDefault(m => m.GroupId == g.Id)
+						.Messages
+						.OrderByDescending(m => m.Time)
+						.Take(10)
+						.ToList() ?? new List<Message>(),
 					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
 					{
 						Email = u.Email,
@@ -113,7 +120,8 @@ namespace Quizo.Services.Groups
 						.ToList()
 				})
 				.FirstOrDefaultAsync(m => m.Id == id);
-			
+
+
 			return groupDetails;
 		}
 

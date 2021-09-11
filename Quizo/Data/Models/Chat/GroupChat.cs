@@ -9,6 +9,6 @@ namespace Quizo.Data.Models.Chat
 
 		public string GroupId { get; init; }
 
-		public List<Message> Messages { get; set; }
+		public IList<Message> Messages { get; set; } = new List<Message>();
 	}
 }

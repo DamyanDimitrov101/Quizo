@@ -11,6 +11,6 @@ namespace Quizo.Data.Models.Chat
 
 		public string GroupChatId { get; init; }
 
-		public string OwnerId { get; init; }
+		public string OwnerName { get; init; }
 	}
 }

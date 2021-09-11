@@ -138,9 +138,12 @@
 								<div class="container">
 									<div id="messageList"></div>
 									<ul id="discussion">
-										@foreach (var message in Model.LastMessages)
+										@foreach (var message in Model.LastMessages.Reverse())
 										{
-											<li>@message.Text  @message.Time</li>	
+											<li class="d-flex justify-content-between">
+												<b class="ml-0">@message.OwnerName</b> 
+												<span class="w-100 pl-3">@message.Text </span>
+												<span class="text-info">@message.Time</span></li>	
 										}
 									</ul>
 
