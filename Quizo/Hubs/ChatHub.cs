@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Quizo.Data;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http.Connections;
 using System.Collections.Generic;
 using System;
 

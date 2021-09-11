@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Quizo.Models.Identity;
+using Quizo.Data.Models.Chat;
 
 namespace Quizo.Services.Groups.Models
 {
@@ -17,5 +18,7 @@ namespace Quizo.Services.Groups.Models
 		public string ImageUrl { get; init; }
 
 		public IList<UserViewModel> Tops { get; set; } = new List<UserViewModel>();
+		public IList<Message> LastMessages { get; set; } = new List<Message>();
+
 	}
 }

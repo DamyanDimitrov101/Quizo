@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Quizo.Data.Models;
+using Quizo.Data.Models.Chat;
 using Quizo.Data.Models.Identity;
 
 namespace Quizo.Data
@@ -13,7 +14,9 @@ namespace Quizo.Data
 		public DbSet<UserGroups> UserGroups { get; init; }
 		public DbSet<CorrectAnswers> CorrectAnswers { get; init; }
 		public DbSet<CurrentAnswer> CurrentAnswer { get; init; }
-		
+		public DbSet<GroupChat> GroupChats { get; init; }
+		public DbSet<Message> Messages { get; init; }
+
 		public QuizoDbContext(DbContextOptions<QuizoDbContext> options)
 			: base(options)
 		{

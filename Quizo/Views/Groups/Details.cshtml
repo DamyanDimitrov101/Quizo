@@ -137,7 +137,12 @@
 							<div class="section">
 								<div class="container">
 									<div id="messageList"></div>
-									<ul id="discussion"></ul>
+									<ul id="discussion">
+										@foreach (var message in Model.LastMessages)
+										{
+											<li>@message.Text  @message.Time</li>	
+										}
+									</ul>
 
 									<hr style="height: 5px;" class="bg-secondary" />
 

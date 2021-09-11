@@ -104,6 +104,7 @@ namespace Quizo.Services.Groups
 					HasQuestions = g.Questions.Any(),
 					Description = g.Description,
 					ImageUrl = g.ImageUrl,
+					LastMessages = this._data.GroupChats.FirstOrDefault(gc=>gc.GroupId==g.Id).Messages,
 					Tops = g.Members.OrderBy(m => m.Id).Take(10).Select(u => new UserViewModel
 					{
 						Email = u.Email,
